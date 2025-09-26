@@ -1,5 +1,5 @@
 import login from "../assets/login.mp4";
-import {useState,useRef} from "react";
+import {useState,useRef,useEffect} from "react";
 import apple from "../assets/apple.png";
 import facebook from "../assets/facebookk.png";
 import google from "../assets/google.png";
@@ -8,6 +8,8 @@ import Background from "../components/Background.jsx";
 
 export default function Login() {
 
+const [isLoaded, setIsLoaded] = useState(false);
+const [isLoadeds, setIsLoadeds] = useState(false);
 const [active,setActive] = useState("SignIn");
 const [activeSignup,setactiveSignup] = useState(false)
 const [activeSignin,setactiveSignin] = useState(true)
@@ -60,7 +62,28 @@ const handleStartSignIn = (e) => {
     // If reached near the end, mark as swiped
     if (offset >= maxOffset * 0.9) {
       setSwipedSignIn(true);
-    }
+      if (activeGoogle == true){
+      setTimeout(() => {
+         setIsLoadeds(true)
+        window.location.href =
+          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/google?act=login";
+      }, 100); 
+    };
+    if (activeFacebook == true){
+      setTimeout(() => {
+         setIsLoadeds(true)
+        window.location.href =
+          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/facebook?act=login";
+      }, 100); 
+    };
+    if (activeApple == true){
+      setTimeout(() => {
+         setIsLoadeds(true)
+        window.location.href =
+          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/github?act=login";
+      }, 100);
+    };
+  }
   };
   
   const onEnd = () => {
@@ -108,10 +131,30 @@ const handleStartSignUp = (e) => {
     setDragXSignUp(offset);
     
     // If reached near the end, mark as swiped
-    if (offset >= maxOffset * 0.9) {
+    if (offset >= maxOffset * 0.9 ) {
       setSwipedSignUp(true);
-      navigateSignUp("/Form");
-    }
+      if (activeGoogle == true){
+      setTimeout(() => {
+         setIsLoadeds(true)
+        window.location.href =
+          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/google?act=signup";
+      }, 100); 
+    };
+    if (activeFacebook == true){
+      setTimeout(() => {
+         setIsLoadeds(true)
+        window.location.href =
+          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/facebook?act=signup";
+      }, 100); 
+    };
+    if (activeApple == true){
+      setTimeout(() => {
+         setIsLoadeds(true)
+        window.location.href =
+          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/github?act=signup";
+      }, 100); 
+    };
+  }
   };
   
   const onEnd = () => {
@@ -139,6 +182,68 @@ const resetSwipeStates = () => {
   setSwipedSignUp(false);
   setDragXSignUp(0);
 };
+
+useEffect(() => {
+  let isMounted = true; // prevent state update if component unmounts
+
+  const fetchPing = async () => {
+    try {
+      const res = await fetch(
+        "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/ping"
+      );
+
+      console.log("Response status:", res.status);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        if (data.status) {
+          console.log("status", data.status);
+        }
+        if (isMounted) setIsLoaded(true); 
+      } else {
+        console.log("Ping failed with status:", res.status);
+        setTimeout(fetchPing, 1000);
+      }
+    } catch (err) {
+      console.error("Error fetching ping:", err);
+      setTimeout(fetchPing, 1000);
+    }
+  };
+
+  fetchPing();
+
+  return () => {
+    isMounted = false; 
+  };
+}, []);
+
+useEffect(() => {
+    window.scrollTo(0, 0);
+    
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+if (!isLoaded) {
+    // Full-page loading screen
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <h1 className="text-2xl font-bold animate-pulse">Loading...</h1>
+      </div>
+    );
+  }
+
+if (isLoadeds) {
+    // Full-page loading screen
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <h1 className="text-2xl font-bold animate-pulse">Loading...</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">

@@ -85,7 +85,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
             message = response.get("message", "")
         except HTTPException as e:
             message = e.detail
-        frontend_url = f"http://localhost:5173/Form?{message}"
+        frontend_url = f"https://finalyearproject-nu.vercel.app/Form?{message}"
         return RedirectResponse(url=frontend_url)
     
     elif act_test == "login":
@@ -94,14 +94,14 @@ async def auth_google(request:Request,db=Depends(get_DB)):
     
             if response.get("message") == "Login successful":
                 token = response.get("token", "")
-                frontend_url = f"http://localhost:5173/login?token={token}"
+                frontend_url = f"https://finalyearproject-nu.vercel.app/login?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
 
         except Exception as e:
             message = e.detail
-            frontend_url = f"http://localhost:5173/login?error={message}"
+            frontend_url = f"https://finalyearproject-nu.vercel.app/login?error={message}"
             return RedirectResponse(url=frontend_url)
         
 oauth2 = OAuth()
@@ -155,19 +155,19 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
             message = response.get("message", "")
         except HTTPException as e:
             message = e.detail
-        frontend_url = f"http://localhost:5173/signup?{urlencode({'message': message})}"
+        frontend_url = f"https://finalyearproject-nu.vercel.app/signup?{urlencode({'message': message})}"
         return RedirectResponse(url=frontend_url)
     elif act_test == "login":
         try:
             response = await login_cli(primary_email, user_info.get("name", "GitHub User"), db)
             if response.get("message") == "Login successful":
                 token = response.get("token", "")
-                frontend_url = f"http://localhost:5173/login?{urlencode({'token': token})}"
+                frontend_url = f"https://finalyearproject-nu.vercel.app/login?{urlencode({'token': token})}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
         except HTTPException as e:
-            frontend_url = f"http://localhost:5173/login?{urlencode({'error': e.detail})}"
+            frontend_url = f"https://finalyearproject-nu.vercel.app/login?{urlencode({'error': e.detail})}"
             return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")
 
@@ -229,7 +229,7 @@ async def facebook_callback(request: Request,db: Session = Depends(get_DB)):
         except HTTPException as e:
             message = e.detail
 
-        frontend_url = f"http://localhost:5173/signup?{urlencode({'message': message})}"
+        frontend_url = f"https://finalyearproject-nu.vercel.app/signup?{urlencode({'message': message})}"
         return RedirectResponse(url=frontend_url)
 
     # --- LOGIN FLOW ---
@@ -239,13 +239,13 @@ async def facebook_callback(request: Request,db: Session = Depends(get_DB)):
 
             if response.get("message") == "Login successful":
                 token = response.get("token", "")
-                frontend_url = f"http://localhost:5173/login?{urlencode({'token': token})}"
+                frontend_url = f"https://finalyearproject-nu.vercel.app/login?{urlencode({'token': token})}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
 
         except HTTPException as e:
-            frontend_url = f"http://localhost:5173/login?{urlencode({'error': e.detail})}"
+            frontend_url = f"https://finalyearproject-nu.vercel.app/login?{urlencode({'error': e.detail})}"
             return RedirectResponse(url=frontend_url)
 
     raise HTTPException(status_code=400, detail="Invalid action")
