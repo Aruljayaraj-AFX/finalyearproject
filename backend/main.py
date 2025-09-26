@@ -1,0 +1,38 @@
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+from routers.client import router
+from starlette.middleware.sessions import SessionMiddleware
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import os
+
+app = FastAPI()
+
+app.add_middleware(SessionMiddleware, secret_key=os.getenv("SESSION_SECRET", "super-secret-key"))
+
+origins = ["http://localhost:5173"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,   
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": f"HTTP {exc.status_code}",
+            "message": exc.detail,
+            "path": str(request.url)
+        }
+    )
+
+
+app.include_router(router,prefix="/Growspire/v1/users",tags=["client"])
+
+if __name__ == "__main__":
+    uvicorn.run("main:app",host="localhost",port=8000,reload=True)
