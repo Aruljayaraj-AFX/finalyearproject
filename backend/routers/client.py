@@ -94,7 +94,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
     
             if response.get("message") == "Login successful":
                 token = response.get("token", "")
-                frontend_url = f"http://localhost:5173/login?token={token}"
+                frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
@@ -162,7 +162,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
             response = await login_cli(primary_email, user_info.get("name", "GitHub User"), db)
             if response.get("message") == "Login successful":
                 token = response.get("token", "")
-                frontend_url = f"http://localhost:5173/login?{urlencode({'token': token})}"
+                frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
@@ -239,7 +239,7 @@ async def facebook_callback(request: Request,db: Session = Depends(get_DB)):
 
             if response.get("message") == "Login successful":
                 token = response.get("token", "")
-                frontend_url = f"http://localhost:5173/login?{urlencode({'token': token})}"
+                frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
