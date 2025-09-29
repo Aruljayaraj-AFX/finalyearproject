@@ -101,7 +101,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
         except HTTPException as e:
             message = e.detail
             if (message == "Email already exists"):
-                response = await login_cli(user_info["email"],user_info["name"], db)
+                response = await login_cli(user_email,user_fullname, db)
                 token = response.get("token", "")
                 check_form = await info_cli(db,token=token)
                 for key, value in check_form.items():
