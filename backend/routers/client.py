@@ -10,6 +10,7 @@ from urllib.parse import urlencode
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from starlette.config import Config
+from utils.security_token import hashword,decode
 import logging
 import json
 import os
@@ -93,6 +94,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                 if (message == "Login successful"):
                     token = response.get("token", "")
                     print("point1",token)
+                    token = decode(token,role="CLIENT")
                     check_form = await info_cli(db,token=token)
                     print("point2",check_form)
                     for key, value in check_form.items():
