@@ -130,15 +130,13 @@ async def auth_google(request:Request,db=Depends(get_DB)):
     
     elif act_test == "login":
         try:
-            response = await login_cli(user_info["email"],user_info["name"], db)
-    
+            response = await login_cli(email,fullname, db)
             if response.get("message") == "Login successful":
                 token = response.get("token", "")
                 frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
-
         except Exception as e:
             message = e.detail
             frontend_url = f"http://localhost:5173/login?error={message}"
@@ -193,7 +191,6 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
             type_sig="GITHUB",
             role="CLIENT"
         )
-
         try:
             response = await new_client(user_model, db=db)
             message = response.get("message", "")
