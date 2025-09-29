@@ -206,11 +206,9 @@ useEffect(() => {
             console.log("ping success")
             setIsLoaded(true); // ✅ backend available → stop loading
           }
-          if(error==="User Not Found"){
-            const triggerError = () => {
+          if(error && error.includes("User Not Found")){
             setErrorMessage("User not found ! Plz signup first ");
             setErrorVisible(true);
-            };
           }
         }
       } else {

@@ -101,7 +101,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     print(data)
                     for key, value in data.items():
                         if value is None :
-                            frontend_url = f"http://localhost:5173/Form?{message},token={token}"
+                            frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                             return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Hero?token={token}"
                     return RedirectResponse(url=frontend_url)
@@ -120,7 +120,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     print(data)
                     for key, value in data.items():
                         if value is None :
-                            frontend_url = f"http://localhost:5173/Form?{message},token={token}"
+                            frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                             return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Hero?token={token}"
                     return RedirectResponse(url=frontend_url)
@@ -201,9 +201,9 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     except Exception:
                         data = {}
                     if any(value is None or value == "null" for value in data.values()):
-                        frontend_url = f"http://localhost:5173/Form?{urlencode({'message': message, 'token': token})}"
+                        frontend_url = f"http://localhost:5173/Form?message={message}&token={token}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
+                    frontend_url = f"http://localhost:5173/Hero?'token'={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
@@ -220,7 +220,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     print(data)
                     for key, value in data.items():
                         if value is None :
-                            frontend_url = f"http://localhost:5173/Form?{message},token={token}"
+                            frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                             return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Hero?token={token}"
                     return RedirectResponse(url=frontend_url)
@@ -238,16 +238,16 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
             login_resp = await login_cli(primary_email, fullname, db)
             if login_resp.get("message") == "Login successful":
                 token = login_resp.get("token", "")
-                frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
+                frontend_url = f"http://localhost:5173/Hero?'token'= {token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
-            frontend_url = f"http://localhost:5173/?{urlencode({'error': e.detail})}"
+            frontend_url = f"http://localhost:5173/?'error'= {e.detail}"
             return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during GitHub login:", e)
-            frontend_url = f"http://localhost:5173/?{urlencode({'error': 'Internal Server Error'})}"
+            frontend_url = f"http://localhost:5173/?'error'= {'Internal Server Error'}"
             return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")
 
@@ -320,28 +320,28 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                     except Exception:
                         data = {}
                     if any(value is None or value == "null" for value in data.values()):
-                        frontend_url = f"http://localhost:5173/Form?{urlencode({'message': message, 'token': token})}"
+                        frontend_url = f"http://localhost:5173/Form?'message'= {message}&'token'={token}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
+                    frontend_url = f"http://localhost:5173/Hero?'token'= {token}"
                     return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during Facebook signup:", e)
-            frontend_url = f"http://localhost:5173/Form?{urlencode({'error': 'Internal Server Error'})}"
+            frontend_url = f"http://localhost:5173/Form?'error'={'Internal Server Error'}"
             return RedirectResponse(url=frontend_url)
     elif act_test == "login":
         try:
             login_resp = await login_cli(email, fullname, db)
             if login_resp.get("message") == "Login successful":
                 token = login_resp.get("token", "")
-                frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
+                frontend_url = f"http://localhost:5173/Hero?'token'= {token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
-            frontend_url = f"http://localhost:5173/?{urlencode({'error': e.detail})}"
+            frontend_url = f"http://localhost:5173/?'error'= {e.detail}"
             return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during Facebook login:", e)
-            frontend_url = f"http://localhost:5173/?{urlencode({'error': 'Internal Server Error'})}"
+            frontend_url = f"http://localhost:5173/?'error'={'Internal Server Error'}"
             return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")
