@@ -101,14 +101,29 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     print(data)
                     for key, value in data.items():
                         if value is None :
-                            frontend_url = f"http://localhost:5173/Form?{message}"
+                            frontend_url = f"http://localhost:5173/Form?{message},token={token}"
                             return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Hero?token={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
             if (message == "Email already exists"):
-                frontend_url = f"http://localhost:5173/?error={message}"
+                response = await login_cli(email, fullname, db)
+                message = response.get("message", "")
+                if (message == "Login successful"):
+                    token = response.get("token", "")
+                    print("point1",token)
+                    token = decode(token,role="CLIENT")
+                    check_form = await info_cli(db,token=token)
+                    print("point2",check_form)
+                    data = json.loads(check_form.body)
+                    print(data)
+                    for key, value in data.items():
+                        if value is None :
+                            frontend_url = f"http://localhost:5173/Form?{message},token={token}"
+                            return RedirectResponse(url=frontend_url)
+                    frontend_url = f"http://localhost:5173/Hero?token={token}"
+                    return RedirectResponse(url=frontend_url)
             else:
                 frontend_url = f"http://localhost:5173/?error={message}"
         return RedirectResponse(url=frontend_url)
@@ -127,6 +142,9 @@ async def auth_google(request:Request,db=Depends(get_DB)):
         except Exception as e:
             message = e.detail
             frontend_url = f"http://localhost:5173/login?error={message}"
+            return RedirectResponse(url=frontend_url)
+        except Exception as e:
+            frontend_url = f"http://localhost:5173/?error=Internal Server Error"
             return RedirectResponse(url=frontend_url)
         
 oauth2 = OAuth()
@@ -167,32 +185,56 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Invalid 'state' format")
     act_test = state.get("act")
+    fullname = user_info.get("name", "GitHub User")
     if act_test == "signup":
-        user_data = {
-            "Email": primary_email,
-            "type_sig": "GITHUB",
-            "fullname": user_info.get("name", "GitHub User"),
-            "role": "CLIENT"
-        }
-        user_model = User_info(**user_data)
+        user_model = User_info(
+            Email=primary_email,
+            fullname=fullname,
+            type_sig="GITHUB",
+            role="CLIENT"
+        )
+
         try:
             response = await new_client(user_model, db=db)
             message = response.get("message", "")
+            if message == "New client created":
+                login_resp = await login_cli(primary_email, fullname, db)
+                if login_resp.get("message") == "Login successful":
+                    token = login_resp.get("token", "")
+                    decoded_token = decode(token, role="CLIENT")
+                    check_form = await info_cli(db, token=decoded_token)
+                    try:
+                        data = json.loads(check_form.body)
+                    except Exception:
+                        data = {}
+                    if any(value is None or value == "null" for value in data.values()):
+                        frontend_url = f"http://localhost:5173/Form?{urlencode({'message': message, 'token': token})}"
+                        return RedirectResponse(url=frontend_url)
+                    frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
+                    return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
-        frontend_url = f"http://localhost:5173/Form?{urlencode({'message': message})}"
+        except Exception as e:
+            print("Unexpected error during GitHub signup:", e)
+            message = "Internal Server Error"
+        frontend_url = f"http://localhost:5173/Form?{urlencode({'error': message})}"
         return RedirectResponse(url=frontend_url)
+
     elif act_test == "login":
         try:
-            response = await login_cli(primary_email, user_info.get("name", "GitHub User"), db)
-            if response.get("message") == "Login successful":
-                token = response.get("token", "")
+            login_resp = await login_cli(primary_email, fullname, db)
+            if login_resp.get("message") == "Login successful":
+                token = login_resp.get("token", "")
                 frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
                 return RedirectResponse(url=frontend_url)
             else:
-                raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
+                raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
             frontend_url = f"http://localhost:5173/login?{urlencode({'error': e.detail})}"
+            return RedirectResponse(url=frontend_url)
+        except Exception as e:
+            print("Unexpected error during GitHub login:", e)
+            frontend_url = f"http://localhost:5173/login?{urlencode({'error': 'Internal Server Error'})}"
             return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")
 
@@ -217,7 +259,7 @@ async def login_facebook(request: Request,act: str):
     return await facebook.authorize_redirect(request, redirect_uri, state=state)
 
 @router.get("/auth/facebook/callback", include_in_schema=True)
-async def facebook_callback(request: Request,db: Session = Depends(get_DB)):
+async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
     facebook = oauth3.create_client("facebook")
     token = await facebook.authorize_access_token(request)
     raw_state = request.query_params.get("state")
@@ -234,43 +276,53 @@ async def facebook_callback(request: Request,db: Session = Depends(get_DB)):
         token=token,
     )
     user_info = resp.json()
-
-    if "email" not in user_info:
+    email = user_info.get("email")
+    fullname = user_info.get("name", "Facebook User")
+    if not email:
         raise HTTPException(status_code=400, detail="Email not returned by Facebook")
-
-    # --- SIGNUP FLOW ---
     if act_test == "signup":
-        user_data = {
-            "Email": user_info["email"],
-            "type_sig": "FACEBOOK",
-            "fullname": user_info.get("name", "Facebook User"),
-            "role": "CLIENT"
-        }
-        user_model = User_info(**user_data)
-
+        user_model = User_info(
+            Email=email,
+            fullname=fullname,
+            type_sig="FACEBOOK",
+            role="CLIENT"
+        )
         try:
             response = await new_client(user_model, db=db)
             message = response.get("message", "")
+            if message == "New client created":
+                login_resp = await login_cli(email, fullname, db)
+                if login_resp.get("message") == "Login successful":
+                    token = login_resp.get("token", "")
+                    decoded_token = decode(token, role="CLIENT")
+                    check_form = await info_cli(db, token=decoded_token)
+                    data = json.loads(check_form.body)
+                    if any(value is None or value == "null" for value in data.values()):
+                        frontend_url = f"http://localhost:5173/Form?{urlencode({'message': message, 'token': token})}"
+                        return RedirectResponse(url=frontend_url)
+                    frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
+                    return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
-
-        frontend_url = f"http://localhost:5173/Form?{urlencode({'message': message})}"
+        except Exception as e:
+            print("Unexpected error during Facebook signup:", e)
+            message = "Internal Server Error"
+        frontend_url = f"http://localhost:5173/Form?{urlencode({'error': message})}"
         return RedirectResponse(url=frontend_url)
-
-    # --- LOGIN FLOW ---
     elif act_test == "login":
         try:
-            response = await login_cli(user_info["email"], user_info.get("name", "Facebook User"), db)
-
-            if response.get("message") == "Login successful":
-                token = response.get("token", "")
+            login_resp = await login_cli(email, fullname, db)
+            if login_resp.get("message") == "Login successful":
+                token = login_resp.get("token", "")
                 frontend_url = f"http://localhost:5173/Hero?{urlencode({'token': token})}"
                 return RedirectResponse(url=frontend_url)
             else:
-                raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
-
+                raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
             frontend_url = f"http://localhost:5173/login?{urlencode({'error': e.detail})}"
             return RedirectResponse(url=frontend_url)
-
+        except Exception as e:
+            print("Unexpected error during Facebook login:", e)
+            frontend_url = f"http://localhost:5173/login?{urlencode({'error': 'Internal Server Error'})}"
+            return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")
