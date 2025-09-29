@@ -70,7 +70,63 @@ async def login_google(request:Request,act:str):
 async def auth_google(request:Request,db=Depends(get_DB)):
     token = await oauth.google.authorize_access_token(request)
     user_info = token['userinfo']
-    print(user_info['email'])
+    email_user = user_info['email']
+    fullname_user = user_info['name']
+    state = json.loads(request.query_params.get('state'))
+    act_test = state.get("act")
+    if act_test == "signup":
+        user_data = {
+            "Email": user_info["email"],
+            "type_sig": "GOOGLE",
+            "fullname": user_info["name"],
+            "role": "CLIENT"
+            }
+        user_iinfo = User_info(**user_data)
+        try:
+            response = await new_client(user_iinfo, db=db)
+            message = response.get("message", "")
+            if (message == "New client created"):
+                token = await login_cli(email_user,fullname_user, db)
+                message = token.get("message", "")
+                if (message == "Login successful"):
+                    token = token.get("token", "")
+                    check_form = await info_cli(db,token=token)
+                    for key, value in check_form.items():
+                        if (value == "null"):
+                            frontend_url = f"http://localhost:5173/Form?{message}"
+                            return RedirectResponse(url=frontend_url)
+                    frontend_url = f"http://localhost:5173/Hero?token={token}"
+                    return RedirectResponse(url=frontend_url)
+        except HTTPException as e:
+            message = e.detail
+            if (message == "Email already exists"):
+                response = await login_cli(email_user,fullname_user, db)
+                token = response.get("token", "")
+                check_form = await info_cli(db,token=token)
+                for key, value in check_form.items():
+                    if (value == "null"):
+                        frontend_url = f"http://localhost:5173/Form?{message},token={token}"
+                        return RedirectResponse(url=frontend_url)
+                frontend_url = f"http://localhost:5173/Hero?error={message},token={token}"
+            else:
+                frontend_url = f"http://localhost:5173/?error={message}"
+        return RedirectResponse(url=frontend_url)
+    
+    elif act_test == "login":
+        try:
+            response = await login_cli(user_info["email"],user_info["name"], db)
+    
+            if response.get("message") == "Login successful":
+                token = response.get("token", "")
+                frontend_url = f"http://localhost:5173/Hero?token={token}"
+                return RedirectResponse(url=frontend_url)
+            else:
+                raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
+
+        except Exception as e:
+            message = e.detail
+            frontend_url = f"http://localhost:5173/login?error={message}"
+            return RedirectResponse(url=frontend_url)
         
 oauth2 = OAuth()
 oauth2.register(
