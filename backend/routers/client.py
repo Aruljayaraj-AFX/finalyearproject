@@ -138,7 +138,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
         except Exception as e:
             message = e.detail
-            frontend_url = f"http://localhost:5173/login?error={message}"
+            frontend_url = f"http://localhost:5173/?error={message}"
             return RedirectResponse(url=frontend_url)
         
 oauth2 = OAuth()
