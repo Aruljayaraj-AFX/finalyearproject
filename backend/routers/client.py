@@ -94,8 +94,8 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                 if (message == "Login successful"):
                     token = response.get("token", "")
                     print("point1",token)
-                    token = decode(token,role="CLIENT")
-                    check_form = await info_cli(db,token=token)
+                    token1 = decode(token,role="CLIENT")
+                    check_form = await info_cli(db,token=token1)
                     print("point2",check_form)
                     data = json.loads(check_form.body)
                     print(data)
