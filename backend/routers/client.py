@@ -124,7 +124,6 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                             return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Hero?token={token}"
                     return RedirectResponse(url=frontend_url)
-            else:
                 frontend_url = f"http://localhost:5173/?error={message}"
         return RedirectResponse(url=frontend_url)
     
@@ -140,9 +139,6 @@ async def auth_google(request:Request,db=Depends(get_DB)):
         except Exception as e:
             message = e.detail
             frontend_url = f"http://localhost:5173/login?error={message}"
-            return RedirectResponse(url=frontend_url)
-        except Exception as e:
-            frontend_url = f"http://localhost:5173/?error=Internal Server Error"
             return RedirectResponse(url=frontend_url)
         
 oauth2 = OAuth()
@@ -247,11 +243,11 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
-            frontend_url = f"http://localhost:5173/login?{urlencode({'error': e.detail})}"
+            frontend_url = f"http://localhost:5173/?{urlencode({'error': e.detail})}"
             return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during GitHub login:", e)
-            frontend_url = f"http://localhost:5173/login?{urlencode({'error': 'Internal Server Error'})}"
+            frontend_url = f"http://localhost:5173/?{urlencode({'error': 'Internal Server Error'})}"
             return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")
 
@@ -342,10 +338,10 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
-            frontend_url = f"http://localhost:5173/login?{urlencode({'error': e.detail})}"
+            frontend_url = f"http://localhost:5173/?{urlencode({'error': e.detail})}"
             return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during Facebook login:", e)
-            frontend_url = f"http://localhost:5173/login?{urlencode({'error': 'Internal Server Error'})}"
+            frontend_url = f"http://localhost:5173/?{urlencode({'error': 'Internal Server Error'})}"
             return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")

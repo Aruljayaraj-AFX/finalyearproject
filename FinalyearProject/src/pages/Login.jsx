@@ -5,9 +5,11 @@ import facebook from "../assets/facebookk.png";
 import google from "../assets/google.png";
 import { useNavigate,useLocation } from "react-router-dom";
 import Background from "../components/Background.jsx";
+import ErrorPopup from "../components/ErrorPopup";
 
 export default function Login() {
-
+const [errorVisible, setErrorVisible] = useState(false);
+const [errorMessage, setErrorMessage] = useState("");
 const [isLoaded, setIsLoaded] = useState(false);
 const [isLoadeds, setIsLoadeds] = useState(false);
 const [active,setActive] = useState("SignIn");
@@ -203,6 +205,12 @@ useEffect(() => {
           if (isMounted) {
             console.log("ping success")
             setIsLoaded(true); // ✅ backend available → stop loading
+          }
+          if(error==="User Not Found"){
+            const triggerError = () => {
+            setErrorMessage("User not found ! Plz signup first ");
+            setErrorVisible(true);
+            };
           }
         }
       } else {
@@ -416,8 +424,11 @@ if (isLoadeds) {
             )}  
           </div>
          </div>
-         
-        {/* Video container - Hidden on mobile and tablet, visible on desktop */}
+         <ErrorPopup
+      message={errorMessage}
+      isVisible={errorVisible}
+      onClose={() => setErrorVisible(false)}
+    />
         <div className="hidden lg:block rounded-3xl bg-blue-200 w-[350px] flex-shrink-0">
           <div className="flex items-center justify-center h-full">
             <video src={login} className="w-full h-[570px] object-cover rounded-3xl" autoPlay loop muted playsInline />
