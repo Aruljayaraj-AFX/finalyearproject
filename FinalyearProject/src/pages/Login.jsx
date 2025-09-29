@@ -3,7 +3,7 @@ import {useState,useRef,useEffect} from "react";
 import apple from "../assets/apple.png";
 import facebook from "../assets/facebookk.png";
 import google from "../assets/google.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import Background from "../components/Background.jsx";
 
 export default function Login() {
@@ -183,9 +183,13 @@ const resetSwipeStates = () => {
   setDragXSignUp(0);
 };
 
+const location = useLocation()
+
 useEffect(() => {
   let isMounted = true; // ✅ should be lowercase true, not True
   let retryTimeout;
+  const queryParam = new URLSearchParams(location.search); 
+  const error = queryParam.get("error");
 
   const fetchPingCheck = async () => {
     try {
