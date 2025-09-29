@@ -73,18 +73,21 @@ async def auth_google(request:Request,db=Depends(get_DB)):
     state = json.loads(request.query_params.get('state'))
     act_test = state.get("act")
     if act_test == "signup":
+        user_email = user_info["email"]
+        user_fullname = user_info["name"]
+        print(user_email,user_fullname)
         user_data = {
             "Email": user_info["email"],
             "type_sig": "GOOGLE",
             "fullname": user_info["name"],
             "role": "CLIENT"
             }
-        user_iinfo = User_info(**user_data)
+        user_info = User_info(**user_data)
         try:
-            response = await new_client(user_iinfo, db=db)
+            response = await new_client(user_info, db=db)
             message = response.get("message", "")
             if (message == "New client created"):
-                token = await login_cli(user_info.Email,user_info.fullname, db)
+                token = await login_cli(user_email,user_fullname, db)
                 message = token.get("message", "")
                 if (message == "Login successful"):
                     token = token.get("token", "")
