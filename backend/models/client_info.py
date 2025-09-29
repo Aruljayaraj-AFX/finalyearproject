@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer,String,Text,DateTime,func,BigInteger
+from sqlalchemy import Column, Integer,String,Text,DateTime,func,BigInteger,JSON
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -8,6 +8,9 @@ class ClientTable(Base):
     client_id = Column(String(30),primary_key=True,index=True)
     client_logo = Column(Text,nullable=True,unique=True)
     client_company_name = Column(String(10),nullable=True)
+    client_description = Column(Text,nullable=True)
+    client_slogan = Column(Text,nullable=True)
+    client_links = Column(JSON,nullable=True)
     client_name = Column(String(30),nullable=False)
     clent_email = Column(String(30),nullable=False)
     client_phone_no = Column(BigInteger,nullable=True)

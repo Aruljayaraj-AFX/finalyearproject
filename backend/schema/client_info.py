@@ -24,8 +24,10 @@ class form_info_client(BaseModel):
     logo:str
     company_name:str
     fullname:constr(pattern=r"^[a-zA-Z '-]{2,50}$")
-    Email:constr(pattern=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
     phone_no:constr(pattern=r"^[0-9]{10}$")
     country:str
     state:str
     district:str
+    description:str
+    slogan:str
+    links:dict

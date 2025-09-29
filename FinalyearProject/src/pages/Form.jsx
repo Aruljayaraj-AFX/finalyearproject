@@ -1,8 +1,9 @@
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import Background from "../components/Background.jsx";
 import {Link} from "react-router-dom"
 
 export default function Form() {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,6 +13,59 @@ export default function Form() {
   const [district, setDistrict] = useState("");
   const [image, setImage] = useState(null);
   const [focusedField, setFocusedField] = useState("");
+
+  useEffect(() => {
+  let isMounted = true; // prevent state update if component unmounts
+
+  const fetchPing = async () => {
+    try {
+      const res = await fetch(
+        "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/ping"
+      );
+
+      console.log("Response status:", res.status);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        if (data.status) {
+          console.log("status", data.status);
+        }
+        if (isMounted) setIsLoaded(true); 
+      } else {
+        console.log("Ping failed with status:", res.status);
+        setTimeout(fetchPing, 1000);
+      }
+    } catch (err) {
+      console.error("Error fetching ping:", err);
+      setTimeout(fetchPing, 1000);
+    }
+  };
+
+  fetchPing();
+
+  return () => {
+    isMounted = false; 
+  };
+}, []);
+
+useEffect(() => {
+    window.scrollTo(0, 0);
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+if (!isLoaded) {
+    // Full-page loading screen
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <h1 className="text-2xl font-bold animate-pulse">Loading...</h1>
+      </div>
+    );
+  }
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

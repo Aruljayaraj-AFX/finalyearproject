@@ -129,6 +129,9 @@ async def form_info_up(form_info,db,token):
         result.client_country = form_info.country
         result.client_State = form_info.state
         result.client_district = form_info.district
+        result.client_description = form_info.description
+        result.client_slogan = form_info.slogan
+        result.client_links = form_info.links
         db.commit()
         db.close()
         return JSONResponse(
