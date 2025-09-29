@@ -155,7 +155,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
             message = response.get("message", "")
         except HTTPException as e:
             message = e.detail
-        frontend_url = f"http://localhost:5173/signup?{urlencode({'message': message})}"
+        frontend_url = f"http://localhost:5173/Form?{urlencode({'message': message})}"
         return RedirectResponse(url=frontend_url)
     elif act_test == "login":
         try:
@@ -229,7 +229,7 @@ async def facebook_callback(request: Request,db: Session = Depends(get_DB)):
         except HTTPException as e:
             message = e.detail
 
-        frontend_url = f"http://localhost:5173/signup?{urlencode({'message': message})}"
+        frontend_url = f"http://localhost:5173/Form?{urlencode({'message': message})}"
         return RedirectResponse(url=frontend_url)
 
     # --- LOGIN FLOW ---
