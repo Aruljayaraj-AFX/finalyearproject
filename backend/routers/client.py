@@ -214,6 +214,26 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
+            if (message == "Email already exists"):
+                response = await login_cli(fullname, fullname, db)
+                message = response.get("message", "")
+                if (message == "Login successful"):
+                    token = response.get("token", "")
+                    print("point1",token)
+                    token = decode(token,role="CLIENT")
+                    check_form = await info_cli(db,token=token)
+                    print("point2",check_form)
+                    data = json.loads(check_form.body)
+                    print(data)
+                    for key, value in data.items():
+                        if value is None :
+                            frontend_url = f"http://localhost:5173/Form?{message},token={token}"
+                            return RedirectResponse(url=frontend_url)
+                    frontend_url = f"http://localhost:5173/Hero?token={token}"
+                    return RedirectResponse(url=frontend_url)
+            else:
+                frontend_url = f"http://localhost:5173/?error={message}"
+                return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during GitHub signup:", e)
             message = "Internal Server Error"
