@@ -100,15 +100,6 @@ async def auth_google(request:Request,db=Depends(get_DB)):
         except HTTPException as e:
             message = e.detail
             if (message == "Email already exists"):
-                response = await login_cli(email_user,fullname_user, db)
-                token = response.get("token", "")
-                check_form = await info_cli(db,token=token)
-                for key, value in check_form.items():
-                    if (value == "null"):
-                        frontend_url = f"http://localhost:5173/Form?{message},token={token}"
-                        return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Hero?error={message},token={token}"
-            else:
                 frontend_url = f"http://localhost:5173/?error={message}"
         return RedirectResponse(url=frontend_url)
     
