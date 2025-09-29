@@ -108,7 +108,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
             if (message == "Email already exists"):
                 frontend_url = f"http://localhost:5173/?error={message}"
             else:
-                raise HTTPException(status_code=400, detail=message)
+                frontend_url = f"http://localhost:5173/?error={message}"
         return RedirectResponse(url=frontend_url)
     
     elif act_test == "login":
