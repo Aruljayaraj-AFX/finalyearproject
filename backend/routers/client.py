@@ -70,7 +70,7 @@ async def login_google(request:Request,act:str):
 async def auth_google(request:Request,db=Depends(get_DB)):
     token = await oauth.google.authorize_access_token(request)
     user_info = token['userinfo']
-    print(user_info)
+    print(user_info['email'])
         
 oauth2 = OAuth()
 oauth2.register(
