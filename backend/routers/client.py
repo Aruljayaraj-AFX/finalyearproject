@@ -85,11 +85,13 @@ async def auth_google(request:Request,db=Depends(get_DB)):
             message = response.get("message", "")
             if (message == "New client created"):
                 print(user_info.Email,user_info.fullname)
-                token = await login_cli(user_info.Email,user_info.fullname, db)
-                message = token.get("message", "")
+                response = await login_cli(user_info["email"],user_info["name"], db)
+                message = response.get("message", "")
                 if (message == "Login successful"):
                     token = token.get("token", "")
+                    print("point1",token)
                     check_form = await info_cli(db,token=token)
+                    print("point2",check_form)
                     for key, value in check_form.items():
                         if (value == "null"):
                             frontend_url = f"http://localhost:5173/Form?{message}"

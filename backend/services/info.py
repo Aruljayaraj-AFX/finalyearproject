@@ -81,6 +81,7 @@ async def new_client(User_info,db):
     
 async def login_cli(email: str, fullname: str, db):
     try:
+        print(email, fullname)
         existing = db.query(ClientTable).filter(ClientTable.clent_email == email).first()
         if not existing:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
