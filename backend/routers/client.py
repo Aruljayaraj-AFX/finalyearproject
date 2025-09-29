@@ -83,9 +83,31 @@ async def auth_google(request:Request,db=Depends(get_DB)):
         try:
             response = await new_client(user_info, db=db)
             message = response.get("message", "")
+            if (message == "New client created"):
+                token = await login_cli(user_info.Email,user_info.fullname, db)
+                message = token.get("message", "")
+                if (message == "Login successful"):
+                    token = token.get("token", "")
+                    check_form = await info_cli(db,token=token)
+                    for key, value in check_form.items():
+                        if (value == "null"):
+                            frontend_url = f"http://localhost:5173/Form?{message}"
+                            return RedirectResponse(url=frontend_url)
+                    frontend_url = f"http://localhost:5173/Hero?token={token}"
+                    return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
-        frontend_url = f"http://localhost:5173/Form?{message}"
+            if (message == "Email already exists"):
+                response = await login_cli(user_info["email"],user_info["name"], db)
+                token = response.get("token", "")
+                check_form = await info_cli(db,token=token)
+                for key, value in check_form.items():
+                    if (value == "null"):
+                        frontend_url = f"http://localhost:5173/Form?{message},token={token}"
+                        return RedirectResponse(url=frontend_url)
+                frontend_url = f"http://localhost:5173/Hero?error={message},token={token}"
+            else:
+                frontend_url = f"http://localhost:5173/?error={message}"
         return RedirectResponse(url=frontend_url)
     
     elif act_test == "login":

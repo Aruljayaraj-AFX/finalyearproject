@@ -11,52 +11,54 @@ export default function Form() {
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
   const [district, setDistrict] = useState("");
+  const [description, setDescription] = useState("");
+  const [slogan, setSlogan] = useState("");
   const [image, setImage] = useState(null);
   const [focusedField, setFocusedField] = useState("");
+useEffect(() => {
+  let isMounted = true; // ✅ should be lowercase true, not True
+  let retryTimeout;
 
-  useEffect(() => {
-  let isMounted = true; // prevent state update if component unmounts
-
-  const fetchPing = async () => {
+  const fetchPingCheck = async () => {
     try {
-      const res = await fetch(
+      const response = await fetch(
         "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/ping"
       );
 
-      console.log("Response status:", res.status);
-
-      if (res.status === 200) {
-        const data = await res.json();
-        if (data.status) {
-          console.log("status", data.status);
+      if (response.status === 200) {
+        const data = await response.json();
+        if (data.status === "available") {
+          if (isMounted) {
+            console.log("ping success")
+            setIsLoaded(true); // ✅ backend available → stop loading
+          }
         }
-        if (isMounted) setIsLoaded(true); 
       } else {
-        console.log("Ping failed with status:", res.status);
-        setTimeout(fetchPing, 1000);
+        if (isMounted) {
+          setIsLoaded(false);
+          retryTimeout = setTimeout(fetchPingCheck, 5000);
+        }
       }
     } catch (err) {
       console.error("Error fetching ping:", err);
-      setTimeout(fetchPing, 1000);
+      if (isMounted) {
+        setIsLoaded(false);
+        retryTimeout = setTimeout(fetchPingCheck, 5000); // retry in 5s
+      }
     }
   };
 
-  fetchPing();
+
+  fetchPingCheck();
 
   return () => {
-    isMounted = false; 
+    isMounted = false; // ✅ stop updating if unmounted
+    clearTimeout(retryTimeout); // cleanup retries
   };
 }, []);
 
-useEffect(() => {
-    window.scrollTo(0, 0);
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 50);
 
-    return () => clearTimeout(timer);
-  }, []);
-
+  
 if (!isLoaded) {
     // Full-page loading screen
     return (
@@ -97,7 +99,7 @@ if (!isLoaded) {
   `;
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
+    <div className="flex items-center justify-center min-h-screen relative p-4">
       <Background/>
       <div className="relative w-full max-w-lg">
         <div className="absolute inset-0 bg-white rounded-3xl border-2 border-[#e1d2f9]/70 shadow-2xl shadow-[#e1d2f9]/70"></div>
@@ -137,6 +139,26 @@ if (!isLoaded) {
               onBlur={() => setFocusedField("")}
               required
               className={inputClasses("companyName")}
+            />
+            <input
+              type="text"
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              onFocus={() => setFocusedField("description")}
+              onBlur={() => setFocusedField("")}
+              required
+              className={inputClasses("description")}
+            />
+            <input
+              type="text"
+              placeholder="Slogan"
+              value={slogan}
+              onChange={(e) => setSlogan(e.target.value)}
+              onFocus={() => setFocusedField("slogan")}
+              onBlur={() => setFocusedField("")}
+              required
+              className={inputClasses("slogan")}
             />
             <input
               type="text"

@@ -184,48 +184,47 @@ const resetSwipeStates = () => {
 };
 
 useEffect(() => {
-  let isMounted = true; // prevent state update if component unmounts
+  let isMounted = true; // ✅ should be lowercase true, not True
+  let retryTimeout;
 
-  const fetchPing = async () => {
+  const fetchPingCheck = async () => {
     try {
-      const res = await fetch(
+      const response = await fetch(
         "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/ping"
       );
 
-      console.log("Response status:", res.status);
-
-      if (res.status === 200) {
-        const data = await res.json();
-        if (data.status) {
-          console.log("status", data.status);
+      if (response.status === 200) {
+        const data = await response.json();
+        if (data.status === "available") {
+          if (isMounted) {
+            console.log("ping success")
+            setIsLoaded(true); // ✅ backend available → stop loading
+          }
         }
-        if (isMounted) setIsLoaded(true); 
       } else {
-        console.log("Ping failed with status:", res.status);
-        setTimeout(fetchPing, 1000);
+        if (isMounted) {
+          setIsLoaded(false);
+          retryTimeout = setTimeout(fetchPingCheck, 5000);
+        }
       }
     } catch (err) {
       console.error("Error fetching ping:", err);
-      setTimeout(fetchPing, 1000);
+      if (isMounted) {
+        setIsLoaded(false);
+        retryTimeout = setTimeout(fetchPingCheck, 5000); // retry in 5s
+      }
     }
   };
 
-  fetchPing();
+
+  fetchPingCheck();
 
   return () => {
-    isMounted = false; 
+    isMounted = false; // ✅ stop updating if unmounted
+    clearTimeout(retryTimeout); // cleanup retries
   };
 }, []);
 
-useEffect(() => {
-    window.scrollTo(0, 0);
-    
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, []);
 
 if (!isLoaded) {
     // Full-page loading screen
