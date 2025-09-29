@@ -70,9 +70,6 @@ async def login_google(request:Request,act:str):
 async def auth_google(request:Request,db=Depends(get_DB)):
     token = await oauth.google.authorize_access_token(request)
     user_info = token['userinfo']
-    email_user = user_info['email']
-    fullname_user = user_info['name']
-    print(email_user,fullname_user)
     state = json.loads(request.query_params.get('state'))
     act_test = state.get("act")
     if act_test == "signup":
@@ -87,7 +84,8 @@ async def auth_google(request:Request,db=Depends(get_DB)):
             response = await new_client(user_info, db=db)
             message = response.get("message", "")
             if (message == "New client created"):
-                token = await login_cli(email_user,fullname_user, db)
+                print(user_info["Email"])
+                token = await login_cli(user_info["Email"],user_info["fullname"], db)
                 message = token.get("message", "")
                 if (message == "Login successful"):
                     token = token.get("token", "")
