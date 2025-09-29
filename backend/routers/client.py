@@ -70,6 +70,9 @@ async def login_google(request:Request,act:str):
 async def auth_google(request:Request,db=Depends(get_DB)):
     token = await oauth.google.authorize_access_token(request)
     user_info = token['userinfo']
+    email= user_info["email"]
+    fullname= user_info["name"]
+    raw_state = request.query_params.get("state")
     state = json.loads(request.query_params.get('state'))
     act_test = state.get("act")
     if act_test == "signup":
@@ -85,7 +88,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
             message = response.get("message", "")
             if (message == "New client created"):
                 print(user_info.Email,user_info.fullname)
-                response = await login_cli(user_info.Email, user_info.fullname, db)
+                response = await login_cli(email, fullname, db)
                 message = response.get("message", "")
                 if (message == "Login successful"):
                     token = response.get("token", "")
@@ -103,8 +106,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
             if (message == "Email already exists"):
                 frontend_url = f"http://localhost:5173/?error={message}"
             else:
-                print(message)
-                frontend_url = f"http://localhost:5173/Form?error={message}"
+                raise HTTPException(status_code=400, detail=message)
         return RedirectResponse(url=frontend_url)
     
     elif act_test == "login":
