@@ -215,7 +215,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
         except HTTPException as e:
             message = e.detail
             if (message == "Email already exists"):
-                response = await login_cli(fullname, fullname, db)
+                response = await login_cli(primary_email, fullname, db)
                 message = response.get("message", "")
                 if (message == "Login successful"):
                     token = response.get("token", "")
