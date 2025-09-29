@@ -69,7 +69,7 @@ async def login_google(request:Request,act:str):
 @router.get("/auth/google/callback" , include_in_schema=True)
 async def auth_google(request:Request,db=Depends(get_DB)):
     token = await oauth.google.authorize_access_token(request)
-    user_info = token['userinfo']
+    user_info = await oauth.google.parse_id_token(request, token)
     state = json.loads(request.query_params.get('state'))
     act_test = state.get("act")
     if act_test == "signup":
