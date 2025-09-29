@@ -97,7 +97,8 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     token = decode(token,role="CLIENT")
                     check_form = await info_cli(db,token=token)
                     print("point2",check_form)
-                    for key, value in check_form.items():
+                    data = json.loads(check_form.body)
+                    for key, value in data.items():
                         if (value == "null"):
                             frontend_url = f"http://localhost:5173/Form?{message}"
                             return RedirectResponse(url=frontend_url)
