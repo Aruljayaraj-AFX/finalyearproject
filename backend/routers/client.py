@@ -100,7 +100,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     data = json.loads(check_form.body)
                     print(data)
                     for key, value in data.items():
-                        if value in None :
+                        if value is None :
                             frontend_url = f"http://localhost:5173/Form?{message}"
                             return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Hero?token={token}"
