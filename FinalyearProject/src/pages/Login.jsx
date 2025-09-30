@@ -177,7 +177,7 @@ const handleStartSignUp = (e) => {
   document.addEventListener("touchend", onEnd);
 };
 
-// Reset function when switching tabs
+
 const resetSwipeStates = () => {
   setSwipedSignIn(false);
   setDragXSignIn(0);
@@ -188,9 +188,9 @@ const resetSwipeStates = () => {
 const location = useLocation()
 
 useEffect(() => {
-  let isMounted = true; // ✅ should be lowercase true, not True
+  let isMounted = true;
   let retryTimeout;
-  const queryParam = new URLSearchParams(location.search); 
+  const queryParam = new URLSearchParams(location.search);
   const error = queryParam.get("error");
 
   const fetchPingCheck = async () => {
@@ -203,11 +203,25 @@ useEffect(() => {
         const data = await response.json();
         if (data.status === "available") {
           if (isMounted) {
-            console.log("ping success")
-            setIsLoaded(true); // ✅ backend available → stop loading
+            console.log("ping success");
+            setIsLoaded(true);
+            setErrorVisible(false);
+
+            const token = localStorage.getItem("token");
+            if (token) {
+              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
+                headers: { "Authorization": `Bearer ${token}` }
+              })
+                .then(res => {
+                  console.log("Security check status:", res.status); 
+                  data = await res.json()
+                })
+                .then(data => console.log("Security check response:", data));
+            }
           }
-          if(error && error.includes("User Not Found")){
-            setErrorMessage("User not found ! Plz signup first ");
+
+          if (error && error.includes("User Not Found")) {
+            setErrorMessage("User not found! Please signup first.");
             setErrorVisible(true);
           }
         }
@@ -221,17 +235,16 @@ useEffect(() => {
       console.error("Error fetching ping:", err);
       if (isMounted) {
         setIsLoaded(false);
-        retryTimeout = setTimeout(fetchPingCheck, 5000); // retry in 5s
+        retryTimeout = setTimeout(fetchPingCheck, 5000);
       }
     }
   };
 
-
   fetchPingCheck();
 
   return () => {
-    isMounted = false; // ✅ stop updating if unmounted
-    clearTimeout(retryTimeout); // cleanup retries
+    isMounted = false;
+    clearTimeout(retryTimeout);
   };
 }, []);
 

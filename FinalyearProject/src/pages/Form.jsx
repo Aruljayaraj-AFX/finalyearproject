@@ -15,11 +15,11 @@ export default function Form() {
   const [slogan, setSlogan] = useState("");
   const [image, setImage] = useState(null);
   const [focusedField, setFocusedField] = useState("");
+  const [token, setToken] = useState(null);
+
 useEffect(() => {
-  let isMounted = true; // ✅ should be lowercase true, not True
+  let isMounted = true; 
   let retryTimeout;
-  const queryParam = new URLSearchParams(location.search); 
-  const error = queryParam.get("token");
 
 
   const fetchPingCheck = async () => {
@@ -33,13 +33,8 @@ useEffect(() => {
         if (data.status === "available") {
           if (isMounted) {
             console.log("ping success")
-            setIsLoaded(true); // ✅ backend available → stop loading
-            fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-            headers: {"Authorization": `Bearer ${token}`}
-            })
-            .then(res => res.json())
-            .then(data => console.log(data));
-          }
+            setIsLoaded(true); 
+            }
         }
       } else {
         if (isMounted) {
@@ -60,12 +55,28 @@ useEffect(() => {
   fetchPingCheck();
 
   return () => {
-    isMounted = false; // ✅ stop updating if unmounted
-    clearTimeout(retryTimeout); // cleanup retries
+    isMounted = false; 
+    clearTimeout(retryTimeout); 
   };
 }, []);
 
-const location = useLocation()
+useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const tokenFromURL = queryParams.get("token");
+    if (tokenFromURL) {
+      setToken(tokenFromURL);
+      console.log("Token from URL:", tokenFromURL);
+      fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
+            headers: {"Authorization": `Bearer ${tokenFromURL}`}
+            })
+            
+            .then(res => res.json())
+            .then(data => console.log(data));
+          
+    }
+  }, [location.search]);
+
+
 
   
 if (!isLoaded) {

@@ -48,7 +48,7 @@ class user_Authorization(HTTPBearer):
             db.close()
             try:
                 if result:
-                    return token
+                    return "successfully_verified"
             except Exception as e:
                 raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
         except:
