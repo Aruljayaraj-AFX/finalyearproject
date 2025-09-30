@@ -206,14 +206,14 @@ useEffect(() => {
             console.log("ping success");
             setIsLoaded(true);
             setErrorVisible(false);
-
-            const token = localStorage.getItem("token"); 
+            const token = localStorage.getItem("token");
+            console.log("Retrieved token:", token); 
             if (token) {
               const response = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
                 headers: { "Authorization": `Bearer ${token}` }
               })
                 const data = await response.json();
-                if (typeof data === "string" && data.split(".").length === 3){
+                if (data["email"]){
                   navigate("/Hero")
                 }
             }

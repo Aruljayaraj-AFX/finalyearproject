@@ -247,8 +247,8 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
     elif act_test == "login":
         try:
             login_resp = await login_cli(primary_email, fullname, db)
-            if response.get("message") == "Login successful":
-                token = response.get("token", "")
+            if login_resp.get("message") == "Login successful":
+                token = login_resp.get("token", "")
                 print("point1",token)
                 token1 = decode(token,role="CLIENT")
                 check_form = await info_cli(db,token=token1)
@@ -352,8 +352,8 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
     elif act_test == "login":
         try:
             login_resp = await login_cli(email, fullname, db)
-            if response.get("message") == "Login successful":
-                token = response.get("token", "")
+            if login_resp.get("message") == "Login successful":
+                token = login_resp.get("token", "")
                 print("point1",token)
                 token1 = decode(token,role="CLIENT")
                 check_form = await info_cli(db,token=token1)
