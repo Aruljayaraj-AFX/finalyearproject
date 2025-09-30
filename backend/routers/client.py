@@ -131,6 +131,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
         try:
             response = await login_cli(email,fullname, db)
             if response.get("message") == "Login successful":
+                message = response.get("message", "")
                 token = response.get("token", "")
                 print("point1",token)
                 token1 = decode(token,role="CLIENT")

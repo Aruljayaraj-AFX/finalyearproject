@@ -60,28 +60,6 @@ useEffect(() => {
   };
 }, []);
 
-useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const tokenFromURL = queryParams.get("token");
-    if (tokenFromURL) {
-      setToken(tokenFromURL);
-      console.log("Token from URL:", tokenFromURL);
-      const response = fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-            headers: {"Authorization": `Bearer ${tokenFromURL}`}
-            })
-        const data = response.json();
-        if (data === "successfully_verified"){
-          console.log("veriied_token")
-          localStorage.setItem("token",tokenFromURL);
-        }
-        else{
-        navigate_check("/")
-        }
-    }
-  }, [location.search]);
-
-
-
   
 if (!isLoaded) {
     // Full-page loading screen
