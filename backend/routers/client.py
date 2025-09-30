@@ -354,7 +354,7 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
         try:
             login_resp = await login_cli(email, fullname, db)
             if login_resp.get("message") == "Login successful":
-                message = response.get("message", "")
+                message = login_resp.get("message", "")
                 token = login_resp.get("token", "")
                 print("point1",token)
                 token1 = decode(token,role="CLIENT")
