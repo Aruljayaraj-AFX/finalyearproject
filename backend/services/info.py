@@ -6,6 +6,7 @@ from database.db import get_DB
 import random
 from sqlalchemy.orm import Session
 import os
+import json
 from datetime import datetime,timedelta
 from dotenv import load_dotenv
 from utils.security_token import hashword,decode
@@ -123,6 +124,8 @@ async def form_info_up(form_info,db,token):
         result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
+        if isinstance(form_info.links, str):
+            form_info.links = json.loads(form_info.links)
         result.client_logo = form_info.logo
         result.client_company_name = form_info.company_name
         result.client_name = form_info.fullname
