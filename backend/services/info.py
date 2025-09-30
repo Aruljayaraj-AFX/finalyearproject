@@ -10,6 +10,7 @@ import json
 from datetime import datetime,timedelta
 from dotenv import load_dotenv
 from utils.security_token import hashword,decode
+import traceback
 
 load_dotenv()
 ACCESS_TOKEN_EXPIRE_MINUTE = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
@@ -145,4 +146,5 @@ async def form_info_up(form_info,db,token):
         )
     except Exception as e:
         db.rollback()
+        traceback.print_exc()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"form update error: {str(e)}")
