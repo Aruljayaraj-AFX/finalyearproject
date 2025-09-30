@@ -132,6 +132,16 @@ async def auth_google(request:Request,db=Depends(get_DB)):
             response = await login_cli(email,fullname, db)
             if response.get("message") == "Login successful":
                 token = response.get("token", "")
+                print("point1",token)
+                token1 = decode(token,role="CLIENT")
+                check_form = await info_cli(db,token=token1)
+                print("point2",check_form)
+                data = json.loads(check_form.body)
+                print(data)
+                for key, value in data.items():
+                    if value is None :
+                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
@@ -236,9 +246,19 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
     elif act_test == "login":
         try:
             login_resp = await login_cli(primary_email, fullname, db)
-            if login_resp.get("message") == "Login successful":
-                token = login_resp.get("token", "")
-                frontend_url = f"http://localhost:5173/Hero?'token'= {token}"
+            if response.get("message") == "Login successful":
+                token = response.get("token", "")
+                print("point1",token)
+                token1 = decode(token,role="CLIENT")
+                check_form = await info_cli(db,token=token1)
+                print("point2",check_form)
+                data = json.loads(check_form.body)
+                print(data)
+                for key, value in data.items():
+                    if value is None :
+                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        return RedirectResponse(url=frontend_url)
+                frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
@@ -331,9 +351,19 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
     elif act_test == "login":
         try:
             login_resp = await login_cli(email, fullname, db)
-            if login_resp.get("message") == "Login successful":
-                token = login_resp.get("token", "")
-                frontend_url = f"http://localhost:5173/Hero?'token'= {token}"
+            if response.get("message") == "Login successful":
+                token = response.get("token", "")
+                print("point1",token)
+                token1 = decode(token,role="CLIENT")
+                check_form = await info_cli(db,token=token1)
+                print("point2",check_form)
+                data = json.loads(check_form.body)
+                print(data)
+                for key, value in data.items():
+                    if value is None :
+                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        return RedirectResponse(url=frontend_url)
+                frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))

@@ -207,16 +207,18 @@ useEffect(() => {
             setIsLoaded(true);
             setErrorVisible(false);
 
-            const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token"); 
             if (token) {
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
+              const response = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
                 headers: { "Authorization": `Bearer ${token}` }
               })
-                .then(res => {
-                  console.log("Security check status:", res.status); 
-                  data = await res.json()
-                })
-                .then(data => console.log("Security check response:", data));
+                const data = await response.json();
+                if (data === "successfully_verified"){
+                  navigate("/Hero")
+                }
+            }
+            else{
+              console.log ("need to get token")
             }
           }
 
@@ -225,13 +227,15 @@ useEffect(() => {
             setErrorVisible(true);
           }
         }
-      } else {
+      } 
+      else {
         if (isMounted) {
           setIsLoaded(false);
           retryTimeout = setTimeout(fetchPingCheck, 5000);
         }
       }
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Error fetching ping:", err);
       if (isMounted) {
         setIsLoaded(false);

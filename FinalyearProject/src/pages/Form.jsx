@@ -1,6 +1,6 @@
 import {useEffect, useState } from "react";
 import Background from "../components/Background.jsx";
-import {Link,useLocation } from "react-router-dom"
+import {Link,useLocation,useNavigate } from "react-router-dom"
 
 export default function Form() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -16,7 +16,7 @@ export default function Form() {
   const [image, setImage] = useState(null);
   const [focusedField, setFocusedField] = useState("");
   const [token, setToken] = useState(null);
-
+  const navigate_check = useNavigate();
 useEffect(() => {
   let isMounted = true; 
   let retryTimeout;
@@ -33,7 +33,7 @@ useEffect(() => {
         if (data.status === "available") {
           if (isMounted) {
             console.log("ping success")
-            setIsLoaded(true); 
+            setIsLoaded(true);
             }
         }
       } else {
@@ -66,13 +66,17 @@ useEffect(() => {
     if (tokenFromURL) {
       setToken(tokenFromURL);
       console.log("Token from URL:", tokenFromURL);
-      fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
+      const response = fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
             headers: {"Authorization": `Bearer ${tokenFromURL}`}
             })
-            
-            .then(res => res.json())
-            .then(data => console.log(data));
-          
+        const data = response.json();
+        if (data === "successfully_verified"){
+          console.log("veriied_token")
+          localStorage.setItem("token",tokenFromURL);
+        }
+        else{
+        navigate_check("/")
+        }
     }
   }, [location.search]);
 
