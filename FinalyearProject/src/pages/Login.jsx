@@ -213,7 +213,7 @@ useEffect(() => {
                 headers: { "Authorization": `Bearer ${token}` }
               })
                 const data = await response.json();
-                if (data === "successfully_verified"){
+                if (typeof data === "string" && data.split(".").length === 3){
                   navigate("/Hero")
                 }
             }

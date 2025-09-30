@@ -50,7 +50,7 @@ class user_Authorization(HTTPBearer):
             db.close()
             try:
                 if result:
-                    return "successfully_verified"
+                    return token
             except Exception as e:
                 raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
         except:
@@ -123,7 +123,7 @@ async def info_cli(db, token):
 async def form_info_up(form_info,db,token):
     try:
         print(type(token))
-        print("test",token["email"])
+        print("test",token)
         result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
