@@ -122,7 +122,8 @@ async def info_cli(db, token):
 
 async def form_info_up(form_info,db,token):
     try:
-        print(token)
+        print(type(token))
+        print("test",token["email"])
         result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
