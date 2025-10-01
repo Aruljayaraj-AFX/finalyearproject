@@ -114,7 +114,9 @@ async def info_cli(db, token):
             "client_phoneno": result.client_phone_no,
             "client_country": result.client_country,
             "client_state": result.client_State,
-            "client_district": result.client_district
+            "client_district": result.client_district,
+            "client_description":result.client_description,
+            "client_slogan" : result.client_slogan
         }
 
     except Exception as e:

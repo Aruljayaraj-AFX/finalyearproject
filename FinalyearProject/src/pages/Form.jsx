@@ -19,14 +19,17 @@ export default function Form() {
   const navigate_check = useNavigate();
   const location = useLocation();
 
-const default_info = (token) => {
+const default_info = async (token) => {
     try {
-      const res = fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
+      const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
         method: "GET",
         headers :{ "Authorization": `Bearer ${token}`}
         })
-      const data = res.json();
+      const data = await res.json();
       console.log("display",data);
+      setName(data.client_name || "");
+      setCompanyName(data.client_company_name || "");
+      setDescription(data.)
     }
     catch (error) {
     console.error("error in default info", error);
