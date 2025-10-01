@@ -101,7 +101,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     token1 = decode(token,role="CLIENT")
                     check_form = await info_cli(db,token1)
                     print("point2",check_form)
-                    data = json.loads(check_form.body)
+                    data = check_form
                     print(data)
                     for key, value in data.items():
                         if value is None :
@@ -120,7 +120,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     token1 = decode(token,role="CLIENT")
                     check_form = await info_cli(db,token1)
                     print("point2",check_form)
-                    data = json.loads(check_form.body)
+                    data = check_form
                     print(data)
                     for key, value in data.items():
                         if value is None :
@@ -140,7 +140,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                 token1 = decode(token,role="CLIENT")
                 check_form = await info_cli(db,token1)
                 print("point2",check_form)
-                data = json.loads(check_form.body)
+                data = check_form
                 print(data)
                 for key, value in data.items():
                     if key != "links" and value is None:
@@ -215,7 +215,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     decoded_token = decode(token, role="CLIENT")
                     check_form = await info_cli(db, token=decoded_token)
                     try:
-                        data = json.loads(check_form.body)
+                        data = check_form
                     except Exception:
                         data = {}
                     if any(value is None or value == "null" for value in data.values()):
@@ -234,7 +234,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     token1 = decode(token,role="CLIENT")
                     check_form = await info_cli(db,token=token1)
                     print("point2",check_form)
-                    data = json.loads(check_form.body)
+                    data = check_form
                     print(data)
                     for key, value in data.items():
                         if value is None :
@@ -261,7 +261,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                 token1 = decode(token,role="CLIENT")
                 check_form = await info_cli(db,token=token1)
                 print("point2",check_form)
-                data = json.loads(check_form.body)
+                data = check_form
                 print(data)
                 for key, value in data.items():
                     if key != "links" and value is None:
@@ -345,7 +345,7 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                     decoded_token = decode(token, role="CLIENT")
                     check_form = await info_cli(db,decoded_token)
                     try:
-                        data = json.loads(check_form.body)
+                        data = check_form
                     except Exception:
                         data = {}
                     if any(value is None or value == "null" for value in data.values()):
@@ -367,7 +367,7 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                 token1 = decode(token,role="CLIENT")
                 check_form = await info_cli(db,token=token1)
                 print("point2",check_form)
-                data = json.loads(check_form.body)
+                data = check_form
                 print(data)
                 for key, value in data.items():
                     if key != "links" and value is None:
