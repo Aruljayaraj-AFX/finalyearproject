@@ -1,5 +1,6 @@
 from pydantic import BaseModel, constr
 from enum import Enum
+from typing import Optional, Dict
 
 class sig_type(str, Enum):
     GOOGLE = "GOOGLE"
@@ -21,13 +22,13 @@ class login_client(BaseModel):
     fullname:constr(pattern=r"^[a-zA-Z '-]{2,50}$")
 
 class form_info_client(BaseModel):
-    logo:str
-    company_name:str
-    fullname:constr(pattern=r"^[a-zA-Z '-]{2,50}$")
-    phone_no:constr(pattern=r"^[0-9]{10}$")
-    country:str
-    state:str
-    district:str
-    description:str
-    slogan:str
-    links:dict
+    logo:Optional[str] = None
+    company_name:Optional[str] = None
+    fullname:Optional[constr(pattern=r"^[a-zA-Z '-]{2,50}$")]= None
+    phone_no:Optional[constr(pattern=r"^[0-9]{10}$")]=None
+    country:Optional[str] = None
+    state:Optional[str] = None
+    district:Optional[str] = None
+    description:Optional[str] = None
+    slogan:Optional[str] = None
+    links:Optional[Dict[str, str]] = {}
