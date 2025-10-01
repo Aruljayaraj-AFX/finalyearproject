@@ -29,7 +29,14 @@ const default_info = async (token) => {
       console.log("display",data);
       setName(data.client_name || "");
       setCompanyName(data.client_company_name || "");
-      setDescription(data.)
+      setDescription(data.client_description || "");
+      setSlogan(data.client_slogan|| "");
+      setEmail(data.client_email||"");
+      setPhone(data.client_phoneno||"");
+      setCountry(data.client_country||"");
+      setState(data.client_state||"");
+      setDistrict(data.client_district||"");
+
     }
     catch (error) {
     console.error("error in default info", error);
@@ -66,8 +73,8 @@ useEffect(() => {
               console.log(data);
               if(data["email"]){
                 localStorage.setItem("token",urltoken);
-                setIsLoaded(true);
                 default_info(urltoken);
+                setIsLoaded(true);
               }
             }
             else if((!urltoken)&&(localtoken)){
@@ -79,8 +86,8 @@ useEffect(() => {
               console.log("check2");
               console.log(data);
               if(data["email"]){
-                setIsLoaded(true);
                 default_info(localtoken);
+                setIsLoaded(true);
               }
             }
             else if((!urltoken)&&(!localtoken)){
@@ -88,8 +95,8 @@ useEffect(() => {
             }
             else if(urltoken == localtoken){
               console.log("both are equal");
-              setIsLoaded(true);
               default_info(localtoken); 
+              setIsLoaded(true);
             }
             else{
               console.log("case 4 : check1");
@@ -102,8 +109,8 @@ useEffect(() => {
                 console.log(data);
                 localStorage.removeItem("token");
                 localStorage.setItem("token",urltoken);
-                setIsLoaded(true);
                 default_info(urltoken);
+                setIsLoaded(true);
               }
             }
             }
@@ -252,6 +259,7 @@ if (!isLoaded) {
               onFocus={() => setFocusedField("email")}
               onBlur={() => setFocusedField("")}
               required
+              disabled  
               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
               className={inputClasses("email")}
             />
