@@ -23,6 +23,19 @@ useEffect(() => {
   let isMounted = true; 
   let retryTimeout;
 
+  const default_info = async (token) => {
+    try {
+      const res = fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
+        method: "GET",
+        headers :{ "Authorization": `Bearer ${token}`}
+        })
+      const data = await res.json();
+      console.log("display",data);
+    }
+    catch{
+      console.log("error in default info")
+    }
+  }
 
   const fetchPingCheck = async () => {
     try {
@@ -51,6 +64,7 @@ useEffect(() => {
               if(data["email"]){
                 localStorage.setItem("token",urltoken);
                 setIsLoaded(true);
+                default_info(urltoken);
               }
             }
             else if((!urltoken)&&(localtoken)){
@@ -63,6 +77,7 @@ useEffect(() => {
               console.log(data);
               if(data["email"]){
                 setIsLoaded(true);
+                default_info(localtoken);
               }
             }
             else if((!urltoken)&&(!localtoken)){
@@ -71,6 +86,7 @@ useEffect(() => {
             else if(urltoken == localtoken){
               console.log("both are equal");
               setIsLoaded(true);
+              default_info(localtoken); 
             }
             else{
               console.log("case 4 : check1");
@@ -84,6 +100,7 @@ useEffect(() => {
                 localStorage.removeItem("token");
                 localStorage.setItem("token",urltoken);
                 setIsLoaded(true);
+                default_info(urltoken);
               }
             }
             }

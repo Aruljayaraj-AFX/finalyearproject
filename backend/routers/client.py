@@ -48,7 +48,6 @@ async def login_client(login_info:login_client,db=Depends(get_DB)):
 async def info_detial(db=Depends(get_DB),token: object = Depends(user_Authorization())):
     return await info_cli(db,token)
 
-
 @router.get("/client_info_check")
 async def info_check(db=Depends(get_DB),token: object = Depends(user_Authorization())):
     return await info_ch(db,token)
@@ -130,8 +129,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     frontend_url = f"http://localhost:5173/Hero?token={token}"
                     return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/?error={message}"
-        return RedirectResponse(url=frontend_url)
-    
+                return RedirectResponse(url=frontend_url)
     elif act_test == "login":
         try:
             response = await login_cli(email,fullname, db)
