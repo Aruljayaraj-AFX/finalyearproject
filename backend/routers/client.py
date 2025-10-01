@@ -256,10 +256,15 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                 print("point2",check_form)
                 data = json.loads(check_form.body)
                 print(data)
+                f=1
                 for key, value in data.items():
-                    if value is None :
-                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
-                        return RedirectResponse(url=frontend_url)
+                    if(key != "links" ):
+                        if(f!=len(data.items())):
+                            if (value is None) :
+                                f+=1
+                                frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        else:
+                            return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:

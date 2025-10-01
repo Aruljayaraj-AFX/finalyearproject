@@ -17,6 +17,8 @@ export default function Form() {
   const [focusedField, setFocusedField] = useState("");
   const [token, setToken] = useState(null);
   const navigate_check = useNavigate();
+  const location = useLocation();
+
 useEffect(() => {
   let isMounted = true; 
   let retryTimeout;
@@ -33,7 +35,57 @@ useEffect(() => {
         if (data.status === "available") {
           if (isMounted) {
             console.log("ping success")
-            setIsLoaded(true);
+            const queryParams = new URLSearchParams(location.search);
+            const urltoken = queryParams.get("token");
+            const localtoken = localStorage.getItem("token");
+            console.log("URL Token:", urltoken);
+            console.log("Local Token:", localtoken);
+            if ((urltoken)&&(!localtoken)){
+              console.log("Case 1: check1");
+              const rescheck = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/",{
+                headers :{ "Authorization": `Bearer ${urltoken}`}
+              })
+              const data = await rescheck.json();
+              console.log("check2");
+              console.log(data);
+              if(data["email"]){
+                localStorage.setItem("token",urltoken);
+                setIsLoaded(true);
+              }
+            }
+            else if((!urltoken)&&(localtoken)){
+              console.log("Case 2: check1");
+              const rescheck = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/",{
+                headers :{ "Authorization": `Bearer ${localtoken}`}
+              })
+              const data = await rescheck.json();
+              console.log("check2");
+              console.log(data);
+              if(data["email"]){
+                setIsLoaded(true);
+              }
+            }
+            else if((!urltoken)&&(!localtoken)){
+              navigate_check("/");
+            }
+            else if(urltoken == localtoken){
+              console.log("both are equal");
+              setIsLoaded(true);
+            }
+            else{
+              console.log("case 4 : check1");
+              const rescheck = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/",{
+                headers :{ "Authorization": `Bearer ${urltoken}`}
+              })
+              const data = await rescheck.json();
+              if(data["email"]){
+                console.log("check2");
+                console.log(data);
+                localStorage.removeItem("token");
+                localStorage.setItem("token",urltoken);
+                setIsLoaded(true);
+              }
+            }
             }
         }
       } else {
@@ -58,7 +110,7 @@ useEffect(() => {
     isMounted = false; 
     clearTimeout(retryTimeout); 
   };
-}, []);
+}, [location]);
 
   
 if (!isLoaded) {
