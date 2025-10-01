@@ -106,7 +106,7 @@ async def info_cli(db, token):
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
 
-        return JSONResponse(content={
+        return {
             "client_logo": result.client_logo,
             "client_company_name": result.client_company_name,
             "client_name": result.client_name,
@@ -115,7 +115,7 @@ async def info_cli(db, token):
             "client_country": result.client_country,
             "client_state": result.client_State,
             "client_district": result.client_district
-        })
+        }
 
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
