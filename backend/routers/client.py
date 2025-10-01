@@ -139,18 +139,16 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                 print("point2",check_form)
                 data = json.loads(check_form.body)
                 print(data)
-                f=1
+                f=0
                 for key, value in data.items():
                     if(key != "links" ):
                         if(f!=len(data.items())):
                             if (value is None) :
                                 f+=1
-                                frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
-                        else:
-                            return RedirectResponse(url=frontend_url)
-                print(f)
-                print(len(data.items()))
-                frontend_url = f"http://localhost:5173/Hero?token={token}"
+                if(f!=0):
+                    frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                else:
+                    frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
