@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Request,Depends
 from fastapi.responses import JSONResponse
 from database.db import get_DB
 from starlette.responses import RedirectResponse
-from services.info import new_client,login_cli,user_Authorization,info_cli,form_info_up
+from services.info import new_client,login_cli,user_Authorization,info_cli,form_info_up,info_ch
 from schema.client_info import User_info,login_client,form_info_client
 from authlib.integrations.starlette_client import OAuth
 from models.client_info import ClientTable
@@ -47,6 +47,11 @@ async def login_client(login_info:login_client,db=Depends(get_DB)):
 @router.get("/client_info_detail")
 async def info_detial(db=Depends(get_DB),token: object = Depends(user_Authorization())):
     return await info_cli(db,token)
+
+
+@router.get("/client_info_check")
+async def info_check(db=Depends(get_DB),token: object = Depends(user_Authorization())):
+    return await info_ch(db,token)
 
 @router.put("/newclient_form_update")
 async def formupdate(form_info:form_info_client,db=Depends(get_DB),token: object = Depends(user_Authorization())):
@@ -139,16 +144,11 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                 print("point2",check_form)
                 data = json.loads(check_form.body)
                 print(data)
-                f=0
                 for key, value in data.items():
-                    if(key != "links" ):
-                        if(f!=len(data.items())):
-                            if (value is None) :
-                                f+=1
-                if(f!=0):
-                    frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
-                else:
-                    frontend_url = f"http://localhost:5173/Hero?token={token}"
+                    if key != "links" and value is None:
+                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        return RedirectResponse(url=frontend_url)
+                frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
@@ -261,15 +261,10 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                 print("point2",check_form)
                 data = json.loads(check_form.body)
                 print(data)
-                f=1
                 for key, value in data.items():
-                    if(key != "links" ):
-                        if(f!=len(data.items())):
-                            if (value is None) :
-                                f+=1
-                                frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
-                        else:
-                            return RedirectResponse(url=frontend_url)
+                    if key != "links" and value is None:
+                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
@@ -372,15 +367,10 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                 print("point2",check_form)
                 data = json.loads(check_form.body)
                 print(data)
-                f=1
                 for key, value in data.items():
-                    if(key != "links" ):
-                        if(f!=len(data.items())):
-                            if (value is None) :
-                                f+=1
-                                frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
-                        else:
-                            return RedirectResponse(url=frontend_url)
+                    if key != "links" and value is None:
+                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:

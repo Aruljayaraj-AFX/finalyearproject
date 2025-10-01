@@ -120,6 +120,22 @@ async def info_cli(db, token):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+async def info_ch(db, token):
+    try:
+        result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
+        result_dict = {column.name: getattr(result, column.name) for column in result.__table__.columns}
+        
+        for key, value in result_dict.items():
+            if key != "links" and value is None:
+                return "incomplete"
+            
+        return "complete"
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
 async def form_info_up(form_info,db,token):
     try:
         print(type(token))

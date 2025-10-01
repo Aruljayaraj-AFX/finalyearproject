@@ -214,7 +214,15 @@ useEffect(() => {
               })
                 const data = await response.json();
                 if (data["email"]){
-                  navigate("/Hero")
+                  const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/");
+                  const datas = await res.json();
+                  console.log(datas)
+                  if(data == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else{
+                    navigate("/Hero")
+                  }
                 }
             }
             else{
