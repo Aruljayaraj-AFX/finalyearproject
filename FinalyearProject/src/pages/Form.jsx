@@ -19,23 +19,23 @@ export default function Form() {
   const navigate_check = useNavigate();
   const location = useLocation();
 
-useEffect(() => {
-  let isMounted = true; 
-  let retryTimeout;
-
-  const default_info = async (token) => {
+const default_info = (token) => {
     try {
       const res = fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
         method: "GET",
         headers :{ "Authorization": `Bearer ${token}`}
         })
-      const data = await res.json();
+      const data = res.json();
       console.log("display",data);
     }
-    catch{
-      console.log("error in default info")
+    catch (error) {
+    console.error("error in default info", error);
     }
   }
+
+useEffect(() => {
+  let isMounted = true; 
+  let retryTimeout;
 
   const fetchPingCheck = async () => {
     try {
