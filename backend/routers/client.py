@@ -148,6 +148,8 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                                 frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                         else:
                             return RedirectResponse(url=frontend_url)
+                print(f)
+                print(len(data.items()))
                 frontend_url = f"http://localhost:5173/Hero?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
