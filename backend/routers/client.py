@@ -107,7 +107,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                         if value is None :
                             frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                             return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Hero?token={token}"
+                    frontend_url = f"http://localhost:5173/Home?token={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
@@ -126,7 +126,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                         if value is None :
                             frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                             return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Hero?token={token}"
+                    frontend_url = f"http://localhost:5173/Home?token={token}"
                     return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/?error={message}"
                 return RedirectResponse(url=frontend_url)
@@ -146,7 +146,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     if key != "links" and value is None:
                         frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Hero?token={token}"
+                frontend_url = f"http://localhost:5173/Home?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
@@ -221,7 +221,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     if any(value is None or value == "null" for value in data.values()):
                         frontend_url = f"http://localhost:5173/Form?message={message}&token={token}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Hero?'token'={token}"
+                    frontend_url = f"http://localhost:5173/Home?'token'={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
@@ -240,7 +240,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                         if value is None :
                             frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                             return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Hero?token={token}"
+                    frontend_url = f"http://localhost:5173/Home?token={token}"
                     return RedirectResponse(url=frontend_url)
             else:
                 frontend_url = f"http://localhost:5173/?error={message}"
@@ -267,7 +267,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     if key != "links" and value is None:
                         frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Hero?token={token}"
+                frontend_url = f"http://localhost:5173/Home?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
@@ -351,7 +351,7 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                     if any(value is None or value == "null" for value in data.values()):
                         frontend_url = f"http://localhost:5173/Form?'message'= {message}&'token'={token}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Hero?'token'= {token}"
+                    frontend_url = f"http://localhost:5173/Home?'token'= {token}"
                     return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during Facebook signup:", e)
@@ -373,7 +373,7 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                     if key != "links" and value is None:
                         frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Hero?token={token}"
+                frontend_url = f"http://localhost:5173/Home?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))

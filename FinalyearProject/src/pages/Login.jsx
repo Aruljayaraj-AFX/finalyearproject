@@ -221,7 +221,7 @@ useEffect(() => {
                     navigate("/Form")
                   }  
                   else{
-                    navigate("/Hero")
+                    navigate("/Home")
                   }
                 }
                 else{

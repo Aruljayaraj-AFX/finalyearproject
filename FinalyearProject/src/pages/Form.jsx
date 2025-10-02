@@ -19,6 +19,9 @@ export default function Form() {
   const navigate_check = useNavigate();
   const location = useLocation();
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errorform, seterrorform] = useState(false);
 
 
 const fileToBase64 = (file) => {
@@ -57,6 +60,7 @@ const default_info = async (token) => {
         })
       const data = await res.json();
       console.log("display",data);
+      setImage(data.client_logo || null);
       setName(data.client_name || "");
       setCompanyName(data.client_company_name || "");
       setDescription(data.client_description || "");
@@ -182,6 +186,7 @@ if (!isLoaded) {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+   setLoading(true);
 
   if (!companyName || !name || !phone || !country || !state || !district || !image || !description || !slogan) {
     alert("Please fill all the fields and upload an image");
@@ -191,7 +196,7 @@ if (!isLoaded) {
   const formData = { 
     company_name: companyName,
     fullname: name,         
-    phone_no: phone,        
+    phone_no: phone.toString(),      
     country: country,
     state: state, 
     district: district,
@@ -217,11 +222,17 @@ if (!isLoaded) {
 
     if (!response.ok) {
   console.error("Validation Error:", data);
+  seterrorform(true);
+  setLoading(false);
   throw new Error(JSON.stringify(data.detail));
 }
 
     console.log(" API Response:", data);
-    alert("Form submitted successfully!");
+    setLoading(false);
+    setSuccess(true);
+    setTimeout(() => {
+      navigate_check("/Home");
+    }, 500);
   } catch (error) {
     console.error(" Error in handleSubmit:", error);
   }
@@ -322,13 +333,14 @@ if (!isLoaded) {
               className={inputClasses("email")}
             />
             <input
-              type="tel"
+              type="text"
               placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               onFocus={() => setFocusedField("phone")}
               onBlur={() => setFocusedField("")}
               required
+              maxLength={10}
               pattern="[0-9]{10}"
               className={inputClasses("phone")}
             />
@@ -362,17 +374,39 @@ if (!isLoaded) {
               required
               className={inputClasses("district")}
             />
-            <Link to={companyName && name && email ? "/Hero" : "#"}
-  onClick={(e) => {handleSubmit(e);}}
-            className="relative flex items-center justify-center w-full h-12 px-6 rounded-xl bg-purple-500 text-white font-medium text-lg shadow-inner shadow-purple-700/50 overflow-hidden group">
-            Submit
-            <div className="absolute right-1 flex items-center justify-center h-10 w-10 bg-white rounded-lg shadow-lg transition-all duration-300 group-hover:w-[calc(100%-0.5rem)]">
-              <svg className="w-5 h-5 text-purple-700 transition-transform duration-300 group-hover:translate-x-1"fill="currentColor"viewBox="0 0 24 24"xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" />
-              </svg>
-            </div>
-          </Link>
+            <Link
+  to="#"
+  onClick={handleSubmit} // handle navigation in JS after success
+  className={`relative flex items-center justify-center w-full h-12 px-6 rounded-xl text-white font-medium text-lg shadow-inner overflow-hidden group
+    ${loading ? "bg-gray-400 cursor-not-allowed" : success ? "bg-green-500" : errorform ? "bg-red-500" : "bg-purple-500"}`}
+>
+  {/* Button Text */}
+  <span className="z-10">
+    {loading
+      ? "Submitting..."
+      : success
+      ? "Submitted!"
+      : errorform
+      ? "Error"
+      : "Submit"}
+  </span>
+
+  {/* Animated arrow */}
+  <div className="absolute right-1 flex items-center justify-center h-10 w-10 bg-white rounded-lg shadow-lg transition-all duration-300 group-hover:w-[calc(100%-0.5rem)]">
+    <svg
+      className={`w-5 h-5 transition-transform duration-300 ${
+        success ? "text-green-700" : errorform ? "text-red-500" : "text-purple-700"
+      } group-hover:translate-x-1`}
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M0 0h24v24H0z" fill="none" />
+      <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" />
+    </svg>
+  </div>
+</Link>
+
           </div>
         </div>
       </div>
