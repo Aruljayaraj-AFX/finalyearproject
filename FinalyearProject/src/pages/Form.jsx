@@ -18,6 +18,36 @@ export default function Form() {
   const [token, setToken] = useState(null);
   const navigate_check = useNavigate();
   const location = useLocation();
+  const [file, setFile] = useState(null);
+
+
+const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+ useEffect(() => {
+    if (file) {
+      setImage(URL.createObjectURL(file));
+
+      const convert = async () => {
+        try {
+          const base64String = await fileToBase64(file);
+          setImage(base64String);
+          console.log("Base64:", base64String);
+        } catch (error) {
+          console.error("Error converting file:", error);
+        }
+      };
+
+      convert();
+    }
+  }, [file]);
 
 const default_info = async (token) => {
     try {
@@ -163,11 +193,6 @@ if (!isLoaded) {
     alert("Form submitted successfully!");
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setImage(URL.createObjectURL(file));
-  };
-
   const inputClasses = (fieldName) => `
     relative w-full px-4 py-3 text-gray-700 bg-white/80 backdrop-blur-sm
     border-2 rounded-xl transition-all duration-300 outline-none text-center
@@ -205,7 +230,7 @@ if (!isLoaded) {
                 id="file-upload"
                 type="file"
                 accept="image/*"
-                onChange={handleImageChange}
+                onChange={(e) => setFile(e.target.files[0])}
                 required
                 className="hidden"
               />
@@ -305,12 +330,7 @@ if (!isLoaded) {
               className={inputClasses("district")}
             />
             <Link to={companyName && name && email ? "/Hero" : "#"}
-  onClick={(e) => {
-    if (!companyName || !name || !email) {
-      e.preventDefault();
-      alert("Fill all fields!");
-    }
-  }}
+  onClick={(e) => {handleSubmit(e);}}
             className="relative flex items-center justify-center w-full h-12 px-6 rounded-xl bg-purple-500 text-white font-medium text-lg shadow-inner shadow-purple-700/50 overflow-hidden group">
             Submit
             <div className="absolute right-1 flex items-center justify-center h-10 w-10 bg-white rounded-lg shadow-lg transition-all duration-300 group-hover:w-[calc(100%-0.5rem)]">

@@ -213,7 +213,7 @@ useEffect(() => {
                 headers: { "Authorization": `Bearer ${token}` }
               })
                 const data = await response.json();
-                if (data["email"]){
+                if (response.status === 200 && data.status === "valid") {
                   const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/");
                   const datas = await res.json();
                   console.log(datas)
@@ -223,6 +223,9 @@ useEffect(() => {
                   else{
                     navigate("/Hero")
                   }
+                }
+                else{
+                  navigate("/")
                 }
             }
             else{

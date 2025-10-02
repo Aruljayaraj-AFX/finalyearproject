@@ -159,11 +159,7 @@ async def form_info_up(form_info,db,token):
         result.client_links = form_info.links
         db.commit()
         db.close()
-        return JSONResponse(
-            content={
-                "message":"successfully_update"
-            }
-        )
+        return {"message":"successfully_update"}
     except Exception as e:
         db.rollback()
         traceback.print_exc()
