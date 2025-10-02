@@ -1,18 +1,19 @@
 import login from "../assets/login.mp4";
-import {useState,useRef,useEffect} from "react";
 import apple from "../assets/apple.png";
 import facebook from "../assets/facebookk.png";
 import google from "../assets/google.png";
+import {useState,useRef,useEffect} from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import Background from "../components/Background.jsx";
 import ErrorPopup from "../components/ErrorPopup";
+    
 
 export default function Login() {
 const [errorVisible, setErrorVisible] = useState(false);
 const [errorMessage, setErrorMessage] = useState("");
 const [isLoaded, setIsLoaded] = useState(false);
-const [isLoadeds, setIsLoadeds] = useState(false);
-const [active,setActive] = useState("SignIn");
+
+const [active, setActive] = useState("SignIn");
 const [activeSignup,setactiveSignup] = useState(false)
 const [activeSignin,setactiveSignin] = useState(true)
 const [activeGoogle,setactiveGoogle] = useState(true);
@@ -24,6 +25,7 @@ const [swipedSignIn, setSwipedSignIn] = useState(false);
 const [dragXSignIn, setDragXSignIn] = useState(0);
 const containerRefSignIn = useRef(null);
 const handleRefSignIn = useRef(null);
+const navigateSignIn = useNavigate();
 
 // Separate state for SignUp
 const [swipedSignUp, setSwipedSignUp] = useState(false);
@@ -31,7 +33,10 @@ const [dragXSignUp, setDragXSignUp] = useState(0);
 const containerRefSignUp = useRef(null);
 const handleRefSignUp = useRef(null);
 const navigateSignUp = useNavigate();
+
+// General navigation
 const navigate = useNavigate();
+
 
 const handleStartSignIn = (e) => {
   e.preventDefault();
@@ -66,28 +71,28 @@ const handleStartSignIn = (e) => {
       setSwipedSignIn(true);
       if (activeGoogle == true){
       setTimeout(() => {
-         setIsLoadeds(true)
+         setIsLoaded(true)
         window.location.href =
           "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/google?act=login";
       }, 100); 
     };
     if (activeFacebook == true){
       setTimeout(() => {
-         setIsLoadeds(true)
+         setIsLoaded(true)
         window.location.href =
           "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/facebook?act=login";
       }, 100); 
     };
     if (activeApple == true){
       setTimeout(() => {
-         setIsLoadeds(true)
+         setIsLoaded(true)
         window.location.href =
           "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/github?act=login";
       }, 100);
     };
   }
   };
-  
+
   const onEnd = () => {
     document.removeEventListener("mousemove", onMove);
     document.removeEventListener("mouseup", onEnd);
@@ -132,26 +137,25 @@ const handleStartSignUp = (e) => {
 
     setDragXSignUp(offset);
     
-    // If reached near the end, mark as swiped
     if (offset >= maxOffset * 0.9 ) {
       setSwipedSignUp(true);
       if (activeGoogle == true){
       setTimeout(() => {
-         setIsLoadeds(true)
+         setIsLoaded(true)
         window.location.href =
           "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/google?act=signup";
       }, 100); 
     };
     if (activeFacebook == true){
       setTimeout(() => {
-         setIsLoadeds(true)
+         setIsLoaded(true)
         window.location.href =
           "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/facebook?act=signup";
       }, 100); 
     };
     if (activeApple == true){
       setTimeout(() => {
-         setIsLoadeds(true)
+         setIsLoaded(true)
         window.location.href =
           "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/github?act=signup";
       }, 100); 
@@ -184,7 +188,6 @@ const resetSwipeStates = () => {
   setSwipedSignUp(false);
   setDragXSignUp(0);
 };
-
 const location = useLocation()
 
 useEffect(() => {
@@ -204,32 +207,42 @@ useEffect(() => {
         if (data.status === "available") {
           if (isMounted) {
             console.log("ping success");
-            setIsLoaded(true);
             setErrorVisible(false);
             const token = localStorage.getItem("token");
             console.log("Retrieved token:", token); 
             if (token) {
+              console.log("Token exists, proceeding with security check.");
               const response = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
                 headers: { "Authorization": `Bearer ${token}` }
               })
+                console.log("Security check response status:", response.status);
                 const data = await response.json();
-                if (response.status === 200 && data.status === "valid") {
-                  const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/");
+                console.log("Security check response data:", data.email);
+                if (response.status === 200 && data.email) {
+                  console.log("Token is valid.",data);
+                  const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${token}` }
+                  });
                   const datas = await res.json();
                   console.log(datas)
-                  if(data == "incomplete"){
+                  setIsLoaded(true);
+                  if(datas == "incomplete"){
                     navigate("/Form")
                   }  
-                  else{
+                  else if (datas == "complete") {
                     navigate("/Home")
                   }
                 }
                 else{
+                  console.log("problem in info check ");
+                  localStorage.removeItem("token");
                   navigate("/")
                 }
             }
             else{
               console.log ("need to get token")
+              setIsLoaded(true);
+              navigate("/")
             }
           }
 
@@ -265,7 +278,6 @@ useEffect(() => {
 
 
 if (!isLoaded) {
-    // Full-page loading screen
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white">
         <h1 className="text-2xl font-bold animate-pulse">Loading...</h1>
@@ -273,22 +285,15 @@ if (!isLoaded) {
     );
   }
 
-if (isLoadeds) {
-    // Full-page loading screen
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white">
-        <h1 className="text-2xl font-bold animate-pulse">Loading...</h1>
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Background />
-      <div className="bg-[#e1d2f9]/70 rounded-3xl shadow-2xl flex flex-col lg:flex-row p-4 gap-4 overflow-hidden w-full max-w-sm sm:max-w-md lg:max-w-4xl items-start">
+      <div className="bg-[#e1d2f9]/70 rounded-3xl shadow-2xl flex flex-col lg:flex-row p-4 gap-4 overflow-hidden w-full max-w-sm sm:max-w-md  lg:max-w-4xl items-start">
         {/* Main content container */}
         <div className="flex flex-col gap-5 flex-1 w-full"> 
-          <div className="flex flex-col items-center justify-center h-auto lg:h-[570px] w-full rounded-3xl bg-gray-100 p-4 sm:p-6 lg:p-8">
+          <div className="flex flex-col items-center justify-center h-auto lg:h-[570px] sm:h-[500px] w-full rounded-3xl bg-gray-100 p-4 sm:p-6 lg:p-8">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-sulphur font-light text-gray-700 mb-4 text-center">Let's dive in!</h1>
 
             <div className="flex mt-4 border border-gray-200 bg-gray-200 rounded-lg w-full max-w-[240px] px-0.5 py-0.5">
@@ -451,10 +456,11 @@ if (isLoadeds) {
           </div>
          </div>
          <ErrorPopup
-      message={errorMessage}
-      isVisible={errorVisible}
-      onClose={() => setErrorVisible(false)}
-    />
+  message={errorMessage}
+  isVisible={errorVisible}
+  onClose={() => setErrorVisible(false)}
+/>
+        {/* Video container - Hidden on mobile and tablet, visible on desktop */}
         <div className="hidden lg:block rounded-3xl bg-blue-200 w-[350px] flex-shrink-0">
           <div className="flex items-center justify-center h-full">
             <video src={login} className="w-full h-[570px] object-cover rounded-3xl" autoPlay loop muted playsInline />

@@ -1,9 +1,8 @@
-import {useEffect, useState } from "react";
-import Background from "../components/Background.jsx";
-import {Link,useLocation,useNavigate } from "react-router-dom"
+import { useEffect,useState } from "react";
+import Background from "./Background.jsx";
+import {Link,useLocation,useNavigate} from "react-router-dom"
 
 export default function Form() {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [companyName, setCompanyName] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,6 +14,7 @@ export default function Form() {
   const [slogan, setSlogan] = useState("");
   const [image, setImage] = useState(null);
   const [focusedField, setFocusedField] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
   const [token, setToken] = useState(null);
   const navigate_check = useNavigate();
   const location = useLocation();
@@ -24,7 +24,7 @@ export default function Form() {
   const [errorform, seterrorform] = useState(false);
 
 
-const fileToBase64 = (file) => {
+  const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -237,6 +237,7 @@ if (!isLoaded) {
     console.error(" Error in handleSubmit:", error);
   }
 };
+
   const inputClasses = (fieldName) => `
     relative w-full px-4 py-3 text-gray-700 bg-white/80 backdrop-blur-sm
     border-2 rounded-xl transition-all duration-300 outline-none text-center
@@ -249,13 +250,13 @@ if (!isLoaded) {
   `;
 
   return (
-    <div className="flex items-center justify-center min-h-screen relative p-4">
+    <div className="flex items-center justify-center min-h-screen  relative p-4">
       <Background/>
       <div className="relative w-full max-w-lg">
         <div className="absolute inset-0 bg-white rounded-3xl border-2 border-[#e1d2f9]/70 shadow-2xl shadow-[#e1d2f9]/70"></div>
         
         <div className="relative p-8">
-          <div className="relative w-full flex justify-center pb-8">
+          <div className="relative w-full flex justify-center pb-6">
               <label
                 htmlFor="file-upload"
                 className="cursor-pointer border-2 border-dotted border-grey-200 rounded-lg p-2 flex items-center justify-center w-full 
@@ -406,7 +407,6 @@ if (!isLoaded) {
     </svg>
   </div>
 </Link>
-
           </div>
         </div>
       </div>
