@@ -105,8 +105,12 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     print(data)
                     for key, value in data.items():
                         if value is None :
-                            frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
-                            return RedirectResponse(url=frontend_url)
+                            params = {
+                            "message": message,
+                            "token": token
+                        }
+                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Home?token={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
@@ -124,8 +128,12 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                     print(data)
                     for key, value in data.items():
                         if value is None :
-                            frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
-                            return RedirectResponse(url=frontend_url)
+                            params = {
+                            "message": message,
+                            "token": token
+                        }
+                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Home?token={token}"
                     return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/?error={message}"
@@ -144,7 +152,11 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                 print(data)
                 for key, value in data.items():
                     if key != "links" and value is None:
-                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        params = {
+                            "message": message,
+                            "token": token
+                        }
+                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/Home?token={token}"
                 return RedirectResponse(url=frontend_url)
@@ -219,9 +231,13 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     except Exception:
                         data = {}
                     if any(value is None or value == "null" for value in data.values()):
-                        frontend_url = f"http://localhost:5173/Form?message={message}&token={token}"
+                        params = {
+                            "message": message,
+                            "token": token
+                        }
+                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Home?'token'={token}"
+                    frontend_url = f"http://localhost:5173/Home?token={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
@@ -238,8 +254,12 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                     print(data)
                     for key, value in data.items():
                         if value is None :
-                            frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
-                            return RedirectResponse(url=frontend_url)
+                            params = {
+                            "message": message,
+                            "token": token
+                        }
+                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Home?token={token}"
                     return RedirectResponse(url=frontend_url)
             else:
@@ -265,7 +285,11 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                 print(data)
                 for key, value in data.items():
                     if key != "links" and value is None:
-                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        params = {
+                            "message": message,
+                            "token": token
+                        }
+                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/Home?token={token}"
                 return RedirectResponse(url=frontend_url)
@@ -349,7 +373,11 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                     except Exception:
                         data = {}
                     if any(value is None or value == "null" for value in data.values()):
-                        frontend_url = f"http://localhost:5173/Form?'message'= {message}&'token'={token}"
+                        params = {
+                            "message": message,
+                            "token": token
+                        }
+                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
                     frontend_url = f"http://localhost:5173/Home?'token'= {token}"
                     return RedirectResponse(url=frontend_url)
@@ -371,7 +399,11 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                 print(data)
                 for key, value in data.items():
                     if key != "links" and value is None:
-                        frontend_url = f"http://localhost:5173/Form?{message}&token={token}"
+                        params = {
+                            "message": message,
+                            "token": token
+                        }
+                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
                 frontend_url = f"http://localhost:5173/Home?token={token}"
                 return RedirectResponse(url=frontend_url)
