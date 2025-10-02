@@ -108,7 +108,23 @@ useEffect(() => {
               if(data["email"]){
                 localStorage.setItem("token",urltoken);
                 default_info(urltoken);
+                console.log("Token is valid.",data);
+                  const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${token}` }
+                  });
+                  const datas = await res.json();
+                  console.log(datas)
+                  setIsLoaded(true);
+                  if(datas == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else if (datas == "complete") {
+                    navigate("/Home")
+                  }
                 setIsLoaded(true);
+              }
+              else{
+                navigate_check("/");
               }
             }
             else if((!urltoken)&&(localtoken)){
@@ -121,7 +137,24 @@ useEffect(() => {
               console.log(data);
               if(data["email"]){
                 default_info(localtoken);
+                console.log("Token is valid.",data);
+                  const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${token}` }
+                  });
+                  const datas = await res.json();
+                  console.log(datas)
+                  setIsLoaded(true);
+                  if(datas == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else if (datas == "complete") {
+                    navigate("/Home")
+                  }
                 setIsLoaded(true);
+              }
+              else{
+                localStorage.removeItem("token");
+                navigate_check("/");
               }
             }
             else if((!urltoken)&&(!localtoken)){
@@ -130,6 +163,19 @@ useEffect(() => {
             else if(urltoken == localtoken){
               console.log("both are equal");
               default_info(localtoken); 
+              console.log("Token is valid.",data);
+                  const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${token}` }
+                  });
+                  const datas = await res.json();
+                  console.log(datas)
+                  setIsLoaded(true);
+                  if(datas == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else if (datas == "complete") {
+                    navigate("/Home")
+                  }
               setIsLoaded(true);
             }
             else{
@@ -144,7 +190,24 @@ useEffect(() => {
                 localStorage.removeItem("token");
                 localStorage.setItem("token",urltoken);
                 default_info(urltoken);
+                console.log("Token is valid.",data);
+                  const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${token}` }
+                  });
+                  const datas = await res.json();
+                  console.log(datas)
+                  setIsLoaded(true);
+                  if(datas == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else if (datas == "complete") {
+                    navigate("/Home")
+                  }
                 setIsLoaded(true);
+              }
+              else{
+                localStorage.removeItem("token");
+                navigate_check("/");
               }
             }
             }
