@@ -1,0 +1,13 @@
+@import "tailwindcss";
+body {
+  font-family: 'Sulphur Point', 'Italiana', serif;
+}
+@keyframes textslide {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-textslide {
+  display: inline-flex;
+  animation: textslide 20s linear infinite;
+}
