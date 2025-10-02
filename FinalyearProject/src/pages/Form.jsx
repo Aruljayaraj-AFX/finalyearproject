@@ -216,8 +216,9 @@ if (!isLoaded) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.detail || "Form update failed");
-    }
+  console.error("Validation Error:", data);
+  throw new Error(JSON.stringify(data.detail));
+}
 
     console.log(" API Response:", data);
     alert("Form submitted successfully!");

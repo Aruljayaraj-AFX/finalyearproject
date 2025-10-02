@@ -7,7 +7,7 @@ class ClientTable(Base):
     __tablename__ = "Client_table"
     client_id = Column(String(30),primary_key=True,index=True)
     client_logo = Column(Text,nullable=True,unique=True)
-    client_company_name = Column(String(10),nullable=True)
+    client_company_name = Column(String(60),nullable=True)
     client_description = Column(Text,nullable=True)
     client_slogan = Column(Text,nullable=True)
     client_links = Column(JSON,nullable=True)

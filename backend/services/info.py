@@ -162,5 +162,5 @@ async def form_info_up(form_info,db,token):
         return {"message":"successfully_update"}
     except Exception as e:
         db.rollback()
-        traceback.print_exc()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"form update error: {str(e)}")
+        traceback.print_exc(file=sys.stdout)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"form update error: {repr(e)}")
