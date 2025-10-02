@@ -12,19 +12,19 @@ class role(str,Enum):
     USER = "USER"
 
 class User_info(BaseModel):
-    Email:constr(pattern=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+    Email:str
     type_sig:sig_type
-    fullname:constr(pattern=r"^[a-zA-Z '-]{2,50}$")
+    fullname:str
     role: role
 
 class login_client(BaseModel):
-    email:constr(pattern=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-    fullname:constr(pattern=r"^[a-zA-Z '-]{2,50}$")
+    email:str
+    fullname:str
 
 class form_info_client(BaseModel):
     logo:Optional[str] = None
     company_name:Optional[str] = None
-    fullname:Optional[constr(pattern=r"^[a-zA-Z '-]{2,50}$")]= None
+    fullname:Optional[str]= None
     phone_no:Optional[constr(pattern=r"^[0-9]{10}$")]=None
     country:Optional[str] = None
     state:Optional[str] = None

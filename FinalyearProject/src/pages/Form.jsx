@@ -180,19 +180,51 @@ if (!isLoaded) {
   }
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!companyName || !name || !email || !phone || !country || !state || !district || !image) {
-      alert("Please fill all the fields and upload an image");
-      return;
-    }
+  if (!companyName || !name || !phone || !country || !state || !district || !image || !description || !slogan) {
+    alert("Please fill all the fields and upload an image");
+    return;
+  }
 
-    const formData = { companyName, name, email, phone, country, state, district, image };
-    console.log(formData);
-    alert("Form submitted successfully!");
+  const formData = { 
+    company_name: companyName,
+    fullname: name,         
+    phone_no: phone,        
+    country: country,
+    state: state, 
+    district: district,
+    logo: image,
+    description: description,
+    slogan: slogan,
+    links: {}
   };
 
+  console.log("Payload sending:", formData);
+
+  try {
+    const response = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/newclient_form_update", {
+      method: "PUT",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}` 
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || "Form update failed");
+    }
+
+    console.log(" API Response:", data);
+    alert("Form submitted successfully!");
+  } catch (error) {
+    console.error(" Error in handleSubmit:", error);
+  }
+};
   const inputClasses = (fieldName) => `
     relative w-full px-4 py-3 text-gray-700 bg-white/80 backdrop-blur-sm
     border-2 rounded-xl transition-all duration-300 outline-none text-center
