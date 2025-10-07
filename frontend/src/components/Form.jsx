@@ -108,6 +108,18 @@ useEffect(() => {
               if(data["email"]){
                 localStorage.setItem("token",urltoken);
                 default_info(urltoken);
+                const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${urltoken}` }
+                  });
+                  const datas = await res.json();
+                  console.log(datas)
+                  setIsLoaded(true);
+                  if(datas == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else if (datas == "complete") {
+                    navigate("/Home")
+                  }
                 setIsLoaded(true);
               }
             }
@@ -121,6 +133,11 @@ useEffect(() => {
               console.log(data);
               if(data["email"]){
                 default_info(localtoken);
+                const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${localtoken}` }
+                  });
+                  const datas = await res.json();
+                  console.log(datas)
                 setIsLoaded(true);
               }
             }
@@ -130,6 +147,11 @@ useEffect(() => {
             else if(urltoken == localtoken){
               console.log("both are equal");
               default_info(localtoken); 
+              const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${localtoken}` }
+                  });
+                  const datas = await res.json();
+                  console.log(datas)
               setIsLoaded(true);
             }
             else{
