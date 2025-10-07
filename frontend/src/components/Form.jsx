@@ -186,10 +186,11 @@ if (!isLoaded) {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-   setLoading(true);
-
+  setLoading(true);
+  seterrorform(false);
   if (!companyName || !name || !phone || !country || !state || !district || !image || !description || !slogan) {
     alert("Please fill all the fields and upload an image");
+    setLoading(false);
     return;
   }
 
@@ -197,46 +198,62 @@ if (!isLoaded) {
     company_name: companyName,
     fullname: name,         
     phone_no: phone.toString(),      
-    country: country,
-    state: state, 
-    district: district,
+    country,
+    state, 
+    district,
     logo: image,
-    description: description,
-    slogan: slogan,
+    description,
+    slogan,
     links: {}
   };
 
   console.log("Payload sending:", formData);
 
   try {
-    const response = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/newclient_form_update", {
-      method: "PUT",
-      headers: { 
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}` 
-      },
-      body: JSON.stringify(formData),
-    });
+    const response = await fetch(
+      "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/newclient_form_update",
+      {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}` 
+        },
+        body: JSON.stringify(formData),
+      }
+    );
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-  console.error("Validation Error:", data);
-  seterrorform(true);
-  setLoading(false);
-  throw new Error(JSON.stringify(data.detail));
-}
+      console.error("Validation Error:", data);
 
-    console.log(" API Response:", data);
+      if (data?.message?.includes("ProgramLimitExceeded") || 
+          (data?.detail && String(data.detail).includes("ProgramLimitExceeded"))) {
+        seterrorform("Logo is too large. Please upload a smaller image (max ~1kB).");
+      } else if (data?.message) {
+        seterrorform(data.message);
+      } else {
+        seterrorform("Failed to submit form. Please try again.");
+      }
+
+      setLoading(false);
+      return;
+    }
+
+    console.log("API Response:", data);
     setLoading(false);
     setSuccess(true);
     setTimeout(() => {
       navigate_check("/Home");
     }, 500);
+
   } catch (error) {
-    console.error(" Error in handleSubmit:", error);
+    console.error("Error in handleSubmit:", error);
+    seterrorform("Network error. Please check your connection and try again.");
+    setLoading(false);
   }
 };
+
 
   const inputClasses = (fieldName) => `
     relative w-full px-4 py-3 text-gray-700 bg-white/80 backdrop-blur-sm
@@ -375,11 +392,15 @@ if (!isLoaded) {
               required
               className={inputClasses("district")}
             />
-            <Link
-  to="#"
-  onClick={handleSubmit} // handle navigation in JS after success
-  className={`relative flex items-center justify-center w-full h-12 px-6 rounded-xl text-white font-medium text-lg shadow-inner overflow-hidden group
-    ${loading ? "bg-gray-400 cursor-not-allowed" : success ? "bg-green-500" : errorform ? "bg-red-500" : "bg-purple-500"}`}
+            <button
+  type="button"
+  onClick={handleSubmit}
+  disabled={loading} // disable during submission
+  className={`relative flex items-center justify-center w-full h-12 px-6 rounded-xl text-white font-medium text-lg shadow-inner overflow-hidden group transition-colors duration-300
+    ${loading ? "bg-gray-400 cursor-not-allowed" 
+      : success ? "bg-green-500" 
+      : errorform ? "bg-red-500" 
+      : "bg-purple-500"}`}
 >
   {/* Button Text */}
   <span className="z-10">
@@ -393,10 +414,15 @@ if (!isLoaded) {
   </span>
 
   {/* Animated arrow */}
-  <div className="absolute right-1 flex items-center justify-center h-10 w-10 bg-white rounded-lg shadow-lg transition-all duration-300 group-hover:w-[calc(100%-0.5rem)]">
+  <div
+    className={`absolute right-1 flex items-center justify-center h-10 w-10 bg-white rounded-lg shadow-lg transition-all duration-300
+      group-hover:w-[calc(100%-0.5rem)]`}
+  >
     <svg
       className={`w-5 h-5 transition-transform duration-300 ${
-        success ? "text-green-700" : errorform ? "text-red-500" : "text-purple-700"
+        success ? "text-green-700" 
+        : errorform ? "text-red-500" 
+        : "text-purple-700"
       } group-hover:translate-x-1`}
       fill="currentColor"
       viewBox="0 0 24 24"
@@ -406,7 +432,12 @@ if (!isLoaded) {
       <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" />
     </svg>
   </div>
-</Link>
+</button>
+
+{/* ✅ Show error message below button */}
+{errorform && (
+  <p className="text-red-500 text-sm mt-2 text-center">{errorform}</p>
+)}
           </div>
         </div>
       </div>

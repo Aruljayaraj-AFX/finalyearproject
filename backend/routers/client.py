@@ -277,7 +277,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
             login_resp = await login_cli(primary_email, fullname, db)
             if login_resp.get("message") == "Login successful":
                 token = login_resp.get("token", "")
-                message = response.get("message", "")
+                message = login_resp.get("message", "")
                 print("point1",token)
                 token1 = decode(token,role="CLIENT")
                 check_form = await info_cli(db,token=token1)
