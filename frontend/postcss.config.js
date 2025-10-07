@@ -1,5 +1,4 @@
-import forms from '@tailwindcss/forms';
-
+/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
@@ -9,12 +8,11 @@ export default {
     extend: {
       fontFamily: {
         sulphur: ["'Sulphur Point'", "serif"],
-        italiana: ["Italiana", "serif"],
-        metal: ["'Metal Mania'", "cursive"], 
-      },
+  italiana: ["Italiana", "serif"],
+},
     },
   },
-  plugins: [
-    forms, 
-  ],
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
 };
