@@ -411,7 +411,9 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
-            frontend_url = f"http://localhost:5173/?'error'= {e.detail}"
+            params = {"error": e.detail}
+            frontend_url = f"http://localhost:5173/?{urlencode(params)}"
+            print(e)
             return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during Facebook login:", e)
