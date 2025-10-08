@@ -193,82 +193,69 @@ const location = useLocation()
 useEffect(() => {
   let isMounted = true;
   let retryTimeout;
+
   const queryParam = new URLSearchParams(location.search);
   const error = queryParam.get("error");
 
-  const fetchPingCheck = async () => {
+  const checkServerAndAuth = async () => {
     try {
-      const response = await fetch(
-        "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/ping"
-      );
-
-      if (response.status === 200) {
-        const data = await response.json();
-        if (data.status === "available") {
-          if (isMounted) {
-            console.log("ping success");
-            setErrorVisible(false);
-            const token = localStorage.getItem("token");
-            console.log("Retrieved token:", token); 
-            if (token) {
-              console.log("Token exists, proceeding with security check.");
-              const response = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-                headers: { "Authorization": `Bearer ${token}` }
-              })
-                console.log("Security check response status:", response.status);
-                const data = await response.json();
-                console.log("Security check response data:", data.email);
-                if (response.status === 200 && data.email) {
-                  console.log("Token is valid.",data);
-                  const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
-                    headers: { "Authorization": `Bearer ${token}` }
-                  });
-                  const datas = await res.json();
-                  console.log(datas)
-                  setIsLoaded(true);
-                  if(datas == "incomplete"){
-                    navigate("/Form")
-                  }  
-                  else if (datas == "complete") {
-                    navigate("/Home")
-                  }
-                }
-                else{
-                  console.log("problem in info check ");
-                  localStorage.removeItem("token");
-                  navigate("/")
-                }
-            }
-            else{
-              console.log ("need to get token")
-              setIsLoaded(true);
-              navigate("/")
-            }
-          }
-
-          if (error && error.includes("User Not Found")) {
-            setErrorMessage("User not found! Please signup first.");
-            setErrorVisible(true);
-          }
-        }
-      } 
-      else {
-        if (isMounted) {
-          setIsLoaded(false);
-          retryTimeout = setTimeout(fetchPingCheck, 5000);
-        }
+      setIsLoaded(false);
+      const pingRes = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/ping");
+      if (pingRes.status !== 200) throw new Error("Ping failed");
+      const pingData = await pingRes.json();
+      if (pingData.status !== "available") throw new Error("Server unavailable");
+      console.log("Server ping success");
+      if (!isMounted) return;
+      setErrorVisible(false);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.log("ℹ No token found, redirecting to Login");
+        setIsLoaded(true);
+        navigate("/");
+        return;
       }
-    } 
-    catch (err) {
-      console.error("Error fetching ping:", err);
+      console.log("🔐 Token found, checking security + client info...");
+      const [securityRes, clientInfoRes] = await Promise.all([
+        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+      const securityData = await securityRes.json();
+      const clientInfoData = await clientInfoRes.json();
+      if (securityRes.status === 200 && securityData.email) {
+        console.log("Token valid:", securityData.email);
+        setIsLoaded(true);
+        if (clientInfoData === "incomplete") {
+          navigate("/Form");
+        } else if (clientInfoData === "complete") {
+          navigate("/Home");
+        } else {
+          console.warn("Unexpected client info:", clientInfoData);
+          navigate("/");
+        }
+      } else {
+        console.warn("Invalid token, redirecting to login");
+        localStorage.removeItem("token");
+        setIsLoaded(true);
+        navigate("/");
+      }
+      if (error && error.includes("User Not Found")) {
+        setErrorMessage("User not found! Please signup first.");
+        setErrorVisible(true);
+      }
+    } catch (err) {
+      console.error("Error during server/auth check:", err);
       if (isMounted) {
         setIsLoaded(false);
-        retryTimeout = setTimeout(fetchPingCheck, 5000);
+        retryTimeout = setTimeout(checkServerAndAuth, 5000);
       }
     }
   };
 
-  fetchPingCheck();
+  checkServerAndAuth();
 
   return () => {
     isMounted = false;

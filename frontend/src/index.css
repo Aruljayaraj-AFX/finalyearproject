@@ -15,20 +15,18 @@ body {
   display: inline-flex;
   animation: textslide 20s linear infinite;
 }
-/* First div “opens” and closes */
+
 @keyframes overlay-toggle {
-  0%, 70% {
-    transform: scaleY(1); /* fully open */
+  0% {
+    transform: scaleY(1);     
     opacity: 1;
   }
-  
-  80%, 100% {
-    transform: scaleY(1); /* open again */
+  100% {
+    transform: scaleY(1.05);  
     opacity: 1;
   }
 }
 
-/* Second div appears when first closes */
 @keyframes overlay-fill {
   0%, 30% {
     transform: scaleY(0); /* hidden */
@@ -45,10 +43,12 @@ body {
 }
 
 .animate-overlay-first {
-  animation: overlay-toggle 1s ease-in-out infinite;}
+  animation: overlay-toggle 5s ease-in-out infinite;
+  transform-origin: top;
+}
 
 .animate-overlay-second {
-  animation: overlay-fill 20s ease-in-out infinite;
+  animation: overlay-fill 5s ease-in-out infinite;
   transform-origin: top;
 }
 

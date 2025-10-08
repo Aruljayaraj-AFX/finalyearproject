@@ -22,6 +22,8 @@ export default function Form() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorform, seterrorform] = useState(false);
+  
+const navigate = useNavigate();
 
 
   const fileToBase64 = (file) => {
@@ -113,7 +115,6 @@ useEffect(() => {
                   });
                   const datas = await res.json();
                   console.log(datas)
-                  setIsLoaded(true);
                   if(datas == "incomplete"){
                     navigate("/Form")
                   }  
@@ -138,6 +139,12 @@ useEffect(() => {
                   });
                   const datas = await res.json();
                   console.log(datas)
+                  if(datas == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else if (datas == "complete") {
+                    navigate("/Home")
+                  }
                 setIsLoaded(true);
               }
             }
@@ -152,6 +159,12 @@ useEffect(() => {
                   });
                   const datas = await res.json();
                   console.log(datas)
+                  if(datas == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else if (datas == "complete") {
+                    navigate("/Home")
+                  }
               setIsLoaded(true);
             }
             else{
@@ -166,6 +179,17 @@ useEffect(() => {
                 localStorage.removeItem("token");
                 localStorage.setItem("token",urltoken);
                 default_info(urltoken);
+                const res = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
+                    headers: { "Authorization": `Bearer ${urltoken}` }
+                  });
+                  const datas = await res.json();
+                  console.log(datas)
+                  if(datas == "incomplete"){
+                    navigate("/Form")
+                  }  
+                  else if (datas == "complete") {
+                    navigate("/Home")
+                  }
                 setIsLoaded(true);
               }
             }
@@ -193,7 +217,7 @@ useEffect(() => {
     isMounted = false; 
     clearTimeout(retryTimeout); 
   };
-}, [location]);
+}, []);
 
   
 if (!isLoaded) {
