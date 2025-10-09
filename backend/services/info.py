@@ -121,7 +121,9 @@ async def info_cli(db, token):
         }
 
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        print("Error in client_info_detail:", e)
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 async def info_ch(db, token):
     try:
@@ -136,7 +138,10 @@ async def info_ch(db, token):
             
         return "complete"
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        print("Error in client_info_detail:", e)
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 async def form_info_up(form_info,db,token):

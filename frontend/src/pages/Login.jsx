@@ -20,28 +20,24 @@ const [activeGoogle,setactiveGoogle] = useState(true);
 const [activeFacebook,setactiveFacebook] = useState(false);
 const [activeApple,setactiveApple] = useState(false);
 
-// Separate state for SignIn
 const [swipedSignIn, setSwipedSignIn] = useState(false);
 const [dragXSignIn, setDragXSignIn] = useState(0);
 const containerRefSignIn = useRef(null);
 const handleRefSignIn = useRef(null);
 const navigateSignIn = useNavigate();
 
-// Separate state for SignUp
 const [swipedSignUp, setSwipedSignUp] = useState(false);
 const [dragXSignUp, setDragXSignUp] = useState(0);
 const containerRefSignUp = useRef(null);
 const handleRefSignUp = useRef(null);
 const navigateSignUp = useNavigate();
 
-// General navigation
 const navigate = useNavigate();
 
 
 const handleStartSignIn = (e) => {
   e.preventDefault();
   
-  // Get starting position for both mouse and touch
   const startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
   const container = containerRefSignIn.current;
   const handle = handleRefSignIn.current;
@@ -57,16 +53,13 @@ const handleStartSignIn = (e) => {
   const onMove = (moveEvent) => {
     moveEvent.preventDefault();
     
-    // Get current position for both mouse and touch
     const currentX = moveEvent.type === 'touchmove' ? moveEvent.touches[0].clientX : moveEvent.clientX;
     let offset = currentX - startX;
     
-    // Clamp the offset to stay within bounds
     offset = Math.max(0, Math.min(offset, maxOffset));
 
     setDragXSignIn(offset);
     
-    // If reached near the end, mark as swiped
     if (offset >= maxOffset * 0.9) {
       setSwipedSignIn(true);
       if (activeGoogle == true){
@@ -99,7 +92,6 @@ const handleStartSignIn = (e) => {
     document.removeEventListener("touchmove", onMove);
     document.removeEventListener("touchend", onEnd);
     
-    // Snap back if not fully swiped
     if (!swipedSignIn) {
       setDragXSignIn(0);
     }
@@ -113,8 +105,6 @@ const handleStartSignIn = (e) => {
 
 const handleStartSignUp = (e) => {
   e.preventDefault();
-  
-  // Get starting position for both mouse and touch
   const startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
   const container = containerRefSignUp.current;
   const handle = handleRefSignUp.current;
@@ -128,11 +118,8 @@ const handleStartSignUp = (e) => {
   const onMove = (moveEvent) => {
     moveEvent.preventDefault();
     
-    // Get current position for both mouse and touch
     const currentX = moveEvent.type === 'touchmove' ? moveEvent.touches[0].clientX : moveEvent.clientX;
     let offset = currentX - startX;
-    
-    // Clamp the offset to stay within bounds
     offset = Math.max(0, Math.min(offset, maxOffset));
 
     setDragXSignUp(offset);
@@ -169,7 +156,6 @@ const handleStartSignUp = (e) => {
     document.removeEventListener("touchmove", onMove);
     document.removeEventListener("touchend", onEnd);
     
-    // Snap back if not fully swiped
     if (!swipedSignUp) {
       setDragXSignUp(0);
     }
@@ -191,78 +177,56 @@ const resetSwipeStates = () => {
 const location = useLocation()
 
 useEffect(() => {
-  let isMounted = true;
-  let retryTimeout;
-
   const queryParam = new URLSearchParams(location.search);
   const error = queryParam.get("error");
-
   const checkServerAndAuth = async () => {
     try {
-      setIsLoaded(false);
-      const pingRes = await fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/ping");
-      if (pingRes.status !== 200) throw new Error("Ping failed");
-      const pingData = await pingRes.json();
-      if (pingData.status !== "available") throw new Error("Server unavailable");
-      console.log("Server ping success");
-      if (!isMounted) return;
-      setErrorVisible(false);
       const token = localStorage.getItem("token");
-      if (!token) {
-        console.log("ℹ No token found, redirecting to Login");
-        setIsLoaded(true);
-        navigate("/");
-        return;
-      }
-      console.log("🔐 Token found, checking security + client info...");
-      const [securityRes, clientInfoRes] = await Promise.all([
-        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
-      const securityData = await securityRes.json();
-      const clientInfoData = await clientInfoRes.json();
-      if (securityRes.status === 200 && securityData.email) {
-        console.log("Token valid:", securityData.email);
-        setIsLoaded(true);
-        if (clientInfoData === "incomplete") {
-          navigate("/Form");
-        } else if (clientInfoData === "complete") {
-          navigate("/Home");
-        } else {
-          console.warn("Unexpected client info:", clientInfoData);
+      if(token){
+        console.log("Token found, checking security + client info...");
+        const [securityRes, clientInfoRes] = await Promise.all([
+          fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+        const securityData = await securityRes.json();
+        const clientInfoData = await clientInfoRes.json();
+        console.log(securityData.email)
+        if (securityRes.status === 200 && securityData.email) {
+          console.log("Token valid:", securityData.email);
+          if (clientInfoData === "incomplete") {
+            navigate("/Form");
+          } else if (clientInfoData === "complete") {
+            navigate("/Home");
+          } else {
+            console.warn("Unexpected client info:", clientInfoData);
+            navigate("/");
+          }
+        } 
+        else {
+          console.warn("Invalid token, redirecting to login");
+          localStorage.removeItem("token");
+          setIsLoaded(true);
           navigate("/");
         }
-      } else {
-        console.warn("Invalid token, redirecting to login");
-        localStorage.removeItem("token");
+        if (error && error.includes("User Not Found")) { 
+          setErrorMessage("User not found! Please signup first."); 
+          setErrorVisible(true); 
+        }
+      }
+      else{
         setIsLoaded(true);
-        navigate("/");
-      }
-      if (error && error.includes("User Not Found")) {
-        setErrorMessage("User not found! Please signup first.");
-        setErrorVisible(true);
-      }
-    } catch (err) {
-      console.error("Error during server/auth check:", err);
-      if (isMounted) {
-        setIsLoaded(false);
-        retryTimeout = setTimeout(checkServerAndAuth, 5000);
       }
     }
+    catch (err) {
+      console.error("Error during server/auth check:", err);
+    }
   };
-
   checkServerAndAuth();
-
-  return () => {
-    isMounted = false;
-    clearTimeout(retryTimeout);
-  };
 }, []);
-
 
 if (!isLoaded) {
     return (
@@ -271,8 +235,6 @@ if (!isLoaded) {
       </div>
     );
   }
-
-
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
