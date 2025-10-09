@@ -1,7 +1,7 @@
 import mail from "../assets/mail.svg"
 import {useEffect,useState,useRef} from 'react';
 
-export default function Navbar(){
+export default function Navbar(CompanyLogo){
     const [showImage,setImage]=useState(false);
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const itemRefs = useRef([]);
@@ -39,10 +39,17 @@ export default function Navbar(){
         setHoveredIndex(null);
     };
 
+    console.log(CompanyLogo)
+
     return(
         <div className="fixed top-0 left-1/2  -translate-x-1/2 mt-4 z-50 w-auto h-[60px] flex  items-center justify-between
          px-6 bg-[#EEE5FF] rounded-full select-none shadow-md">
-          {showImage &&(<img src={mail} alt="mail" className="border rounded-full px-4 -ml-5 mr-3 py-4 transition-opacity duration-300"/>)}
+          {showImage &&(<img 
+          src={CompanyLogo} 
+          style={{ height: "60px", objectFit: "cover" }}
+          alt="Company Logo" 
+          className="border rounded-full px-4 -ml-5 mr-3 py-4 transition-opacity duration-300"
+        />)}
           
           <div 
             ref={containerRef}

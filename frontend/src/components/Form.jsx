@@ -57,164 +57,73 @@ const navigate = useNavigate();
 useEffect(() => {
   const fetchPingCheck = async () => {
     try {
-          const queryParams = new URLSearchParams(location.search);
-          const urltoken = queryParams.get("token");
-          const localtoken = localStorage.getItem("token");
-          console.log("URL Token:", urltoken);
-          console.log("Local Token:", localtoken);
-          if ((urltoken)&&(!localtoken)){
-            console.log("Case 1: check1");
-            const [rescheck,res,resdatacli] = await Promise.all([
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/",{
-              headers :{ "Authorization": `Bearer ${urltoken}`}
-              }),
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
-              headers: { "Authorization": `Bearer ${urltoken}` }
-              }),
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
-              method: "GET",
-              headers :{ "Authorization": `Bearer ${urltoken}`}
-              })
-            ]);
-            const [data,datas,clformdata] = await Promise.all([rescheck.json(),res.json(),resdatacli.json()]); 
-            console.log("check2");
-            console.log(data);
-            if(data["email"]){
-              localStorage.setItem("token",urltoken);
-              setImage(clformdata.client_logo || null);
-              setName(clformdata.client_name || "");
-              setCompanyName(clformdata.client_company_name || "");
-              setDescription(clformdata.client_description || "");
-              setSlogan(clformdata.client_slogan|| "");
-              setEmail(clformdata.client_email||"");
-              setPhone(clformdata.client_phoneno||"");
-              setCountry(clformdata.client_country||"");
-              setState(clformdata.client_state||"");
-              setDistrict(clformdata.client_district||"");
-                if(datas == "incomplete"){
-                  setIsLoaded(true);
-                }  
-                else if (datas == "complete") {
-                  navigate("/Home")
-                }
-            }
-          }
-          else if((!urltoken)&&(localtoken)){
-            console.log("Case 2: check1");
-            const [rescheck,res,resdatacli] = await Promise.all([
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/",{
-                headers :{ "Authorization": `Bearer ${localtoken}`}
-              }),
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
-                headers: { "Authorization": `Bearer ${localtoken}` }
-              }),
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
-              method: "GET",
-              headers :{ "Authorization": `Bearer ${localtoken}`}
-              })
-            ]); 
-            const [data,datas,clformdata] = await Promise.all([rescheck.json(),res.json(),resdatacli.json()]);
-            console.log("check2");
-            console.log(data);
-            if(data["email"]){ 
-              setImage(clformdata.client_logo || null);
-              setName(clformdata.client_name || "");
-              setCompanyName(clformdata.client_company_name || "");
-              setDescription(clformdata.client_description || "");
-              setSlogan(clformdata.client_slogan|| "");
-              setEmail(clformdata.client_email||"");
-              setPhone(clformdata.client_phoneno||"");
-              setCountry(clformdata.client_country||"");
-              setState(clformdata.client_state||"");
-              setDistrict(clformdata.client_district||"");
-              if(datas == "incomplete"){
-                setIsLoaded(true);
-              }  
-              else if (datas == "complete") {
-                navigate("/Home")
-              }
-            }
-          }
-          else if((!urltoken)&&(!localtoken)){
-            navigate_check("/");
-          }
-          else if(urltoken == localtoken){
-            console.log("both are equal");
-            const [res,resdatacli] = await Promise.all([
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
-                headers: { "Authorization": `Bearer ${localtoken}` }
-              }),
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
-              method: "GET",
-              headers :{ "Authorization": `Bearer ${localtoken}`}
-              })
-            ]);
-            const [datas,clformdata] = await Promise.all([rescheck.json(),res.json(),resdatacli.json()]);
-            setImage(clformdata.client_logo || null);
-            setName(clformdata.client_name || "");
-            setCompanyName(clformdata.client_company_name || "");
-            setDescription(clformdata.client_description || "");
-            setSlogan(clformdata.client_slogan|| "");
-            setEmail(clformdata.client_email||"");
-            setPhone(clformdata.client_phoneno||"");
-            setCountry(clformdata.client_country||"");
-            setState(clformdata.client_state||"");
-            setDistrict(clformdata.client_district||"");
-            console.log(datas)
-            if(datas == "incomplete"){
-              setIsLoaded(true);
-            }  
-            else if (datas == "complete") {
-              navigate("/Home")
-            }
-          }
-          else{
-            console.log("case 4 : check1");
-            const [rescheck,res,resdatacli] = await Promise.all([
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/",{
-                headers :{ "Authorization": `Bearer ${urltoken}`}
-              }),
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",{
-                headers: { "Authorization": `Bearer ${urltoken}` }
-              }),
-              fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
-              method: "GET",
-              headers :{ "Authorization": `Bearer ${urltoken}`}
-              })
-            ]); 
-            const [data,datas,clformdata] = await Promise.all([rescheck.json(),res.json(),resdatacli.json()]);
-            if(data["email"]){
-              console.log("check2");
-              console.log(data);
-              localStorage.removeItem("token");
-              localStorage.setItem("token",urltoken);
-              setImage(clformdata.client_logo || null);
-              setName(clformdata.client_name || "");
-              setCompanyName(clformdata.client_company_name || "");
-              setDescription(clformdata.client_description || "");
-              setSlogan(clformdata.client_slogan|| "");
-              setEmail(clformdata.client_email||"");
-              setPhone(clformdata.client_phoneno||"");
-              setCountry(clformdata.client_country||"");
-              setState(clformdata.client_state||"");
-              setDistrict(clformdata.client_district||"");
-              console.log(datas)
-              if(datas == "incomplete"){
-                setIsLoaded(true);
-              }  
-              else if (datas == "complete") {
-                navigate("/Home")
-              }
-            }
-          }
-        }
-        catch (err) {
-        console.error("Error:", err);
-        }
+      const queryParams = new URLSearchParams(location.search);
+      const urltoken = queryParams.get("token");
+      const localtoken = localStorage.getItem("token");
+
+      console.log("URL Token:", urltoken);
+      console.log("Local Token:", localtoken);
+
+      let activeToken = urltoken || localtoken;
+      if (!activeToken) {
+        navigate_check("/");
+        return;
+      }
+
+      if (urltoken && localtoken && urltoken !== localtoken) {
+        console.log("Token mismatch → refreshing");
+        localStorage.setItem("token", urltoken);
+        activeToken = urltoken;
+      }
+
+      const [securityRes, infoRes, detailRes] = await Promise.allSettled([
+        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
+          headers: { "Authorization": `Bearer ${activeToken}` },
+        }),
+        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/", {
+          headers: { "Authorization": `Bearer ${activeToken}` },
+        }),
+        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail", {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${activeToken}` },
+        }),
+      ]);
+
+      const securityData = await securityRes.value.json();
+      if (!securityRes===200 || !securityData?.email) {
+        console.warn("Invalid security response, redirecting...");
+        localStorage.removeItem(token);
+        navigate_check("/");
+        return;
+      }
+
+      const infoData = (infoRes.value.ok) ? await infoRes.value.json() : "incomplete";
+      const detailData = (detailRes.value.ok) ? await detailRes.value.json() : {};
+
+      setImage(detailData.client_logo || null);
+      setName(detailData.client_name || "");
+      setCompanyName(detailData.client_company_name || "");
+      setDescription(detailData.client_description || "");
+      setSlogan(detailData.client_slogan || "");
+      setEmail(detailData.client_email || "");
+      setPhone(detailData.client_phoneno || "");
+      setCountry(detailData.client_country || "");
+      setState(detailData.client_state || "");
+      setDistrict(detailData.client_district || "");
+
+      if (infoData === "incomplete") {
+        setIsLoaded(true);
+      } else if (infoData === "complete") {
+        navigate("/Home");
+      }
+    } catch (err) {
+      console.error("error:", err);
+      navigate_check("/");
+    }
   };
+
   fetchPingCheck();
 }, []);
-
   
 if (!isLoaded) {
     return (

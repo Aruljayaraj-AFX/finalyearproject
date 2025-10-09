@@ -47,7 +47,7 @@ class user_Authorization(HTTPBearer):
         token = decode(credentials.credentials,role="CLIENT")
         print(token)
         try:
-            result=db.query(ClientTable).filter(ClientTable.clent_email==token['email']).first()
+            result = db.query(ClientTable).filter(ClientTable.client_email == token['email']).first()
             db.close()
             try:
                 if result:
