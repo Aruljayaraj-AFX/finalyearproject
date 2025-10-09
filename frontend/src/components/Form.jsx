@@ -54,18 +54,6 @@ const navigate = useNavigate();
     }
   }, [file]);
 
-const default_info = async (token) => {
-    try {
-      const data = await res.json();
-      console.log("display",data);
-      
-
-    }
-    catch (error) {
-    console.error("error in default info", error);
-    }
-  }
-
 useEffect(() => {
   const fetchPingCheck = async () => {
     try {
@@ -85,7 +73,7 @@ useEffect(() => {
               }),
               fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail",{
               method: "GET",
-              headers :{ "Authorization": `Bearer ${token}`}
+              headers :{ "Authorization": `Bearer ${urltoken}`}
               })
             ]);
             const [data,datas,clformdata] = await Promise.all([rescheck.json(),res.json(),resdatacli.json()]); 
@@ -104,12 +92,11 @@ useEffect(() => {
               setState(clformdata.client_state||"");
               setDistrict(clformdata.client_district||"");
                 if(datas == "incomplete"){
-                  navigate("/Form")
+                  setIsLoaded(true);
                 }  
                 else if (datas == "complete") {
                   navigate("/Home")
                 }
-              setIsLoaded(true);
             }
           }
           else if((!urltoken)&&(localtoken)){
@@ -141,12 +128,11 @@ useEffect(() => {
               setState(clformdata.client_state||"");
               setDistrict(clformdata.client_district||"");
               if(datas == "incomplete"){
-                navigate("/Form")
+                setIsLoaded(true);
               }  
               else if (datas == "complete") {
                 navigate("/Home")
               }
-            setIsLoaded(true);
             }
           }
           else if((!urltoken)&&(!localtoken)){
@@ -176,12 +162,11 @@ useEffect(() => {
             setDistrict(clformdata.client_district||"");
             console.log(datas)
             if(datas == "incomplete"){
-              navigate("/Form")
+              setIsLoaded(true);
             }  
             else if (datas == "complete") {
               navigate("/Home")
             }
-            setIsLoaded(true);
           }
           else{
             console.log("case 4 : check1");
@@ -215,12 +200,11 @@ useEffect(() => {
               setDistrict(clformdata.client_district||"");
               console.log(datas)
               if(datas == "incomplete"){
-                navigate("/Form")
+                setIsLoaded(true);
               }  
               else if (datas == "complete") {
                 navigate("/Home")
               }
-              setIsLoaded(true);
             }
           }
         }

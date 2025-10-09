@@ -159,7 +159,7 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                         }
                         frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Home?token={token}"
+                frontend_url = f"http://localhost:5173/Form?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
@@ -238,7 +238,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                         }
                         frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Home?token={token}"
+                    frontend_url = f"http://localhost:5173/Form?token={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
@@ -261,7 +261,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                         }
                         frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Home?token={token}"
+                    frontend_url = f"http://localhost:5173/Form?token={token}"
                     return RedirectResponse(url=frontend_url)
             else:
                 frontend_url = f"http://localhost:5173/?error={message}"
@@ -292,7 +292,7 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                         }
                         frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Home?token={token}"
+                frontend_url = f"http://localhost:5173/Form?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
@@ -380,7 +380,7 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                         }
                         frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Home?'token'= {token}"
+                    frontend_url = f"http://localhost:5173/Form?'token'= {token}"
                     return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during Facebook signup:", e)
@@ -406,7 +406,7 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                         }
                         frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Home?token={token}"
+                frontend_url = f"http://localhost:5173/Form?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))

@@ -179,53 +179,21 @@ const location = useLocation()
 useEffect(() => {
   const queryParam = new URLSearchParams(location.search);
   const error = queryParam.get("error");
-  const checkServerAndAuth = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if(token){
-        console.log("Token found, checking security + client info...");
-        const [securityRes, clientInfoRes] = await Promise.all([
-          fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
-        const securityData = await securityRes.json();
-        const clientInfoData = await clientInfoRes.json();
-        console.log(securityData.email)
-        if (securityRes.status === 200 && securityData.email) {
-          console.log("Token valid:", securityData.email);
-          if (clientInfoData === "incomplete") {
-            navigate("/Form");
-          } else if (clientInfoData === "complete") {
-            navigate("/Home");
-          } else {
-            console.warn("Unexpected client info:", clientInfoData);
-            navigate("/");
-          }
-        } 
-        else {
-          console.warn("Invalid token, redirecting to login");
-          localStorage.removeItem("token");
-          setIsLoaded(true);
-          navigate("/");
-        }
-        if (error && error.includes("User Not Found")) { 
+  const token = localStorage.getItem("token");
+  if(token){
+    navigate("/Form")
+  }
+  else{
+    setIsLoaded(true);
+  }
+  if (error && error.includes("User Not Found")) { 
           setErrorMessage("User not found! Please signup first."); 
           setErrorVisible(true); 
-        }
-      }
-      else{
-        setIsLoaded(true);
-      }
-    }
-    catch (err) {
-      console.error("Error during server/auth check:", err);
-    }
-  };
-  checkServerAndAuth();
+  }
+  else if(error){
+    setErrorMessage("plz...try after sometimes.....");
+    setErrorVisible(true); 
+  }
 }, []);
 
 if (!isLoaded) {
