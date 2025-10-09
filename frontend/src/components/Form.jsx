@@ -90,7 +90,7 @@ useEffect(() => {
       ]);
 
       const securityData = await securityRes.value.json();
-      if (!securityRes===200 || !securityData?.email) {
+      if (!securityRes.value.ok|| !securityData?.email) {
         console.warn("Invalid security response, redirecting...");
         localStorage.removeItem(token);
         navigate_check("/");

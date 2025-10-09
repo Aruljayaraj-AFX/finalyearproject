@@ -91,6 +91,8 @@ async def login_cli(email: str, fullname: str, db):
 
         token = access_token(email, fullname, role="CLIENT")
 
+        print(token)
+
         return {
             "message": "Login successful",
             "token": token,
