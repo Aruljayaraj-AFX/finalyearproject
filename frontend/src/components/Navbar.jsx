@@ -39,7 +39,7 @@ export default function Navbar(CompanyLogo){
         setHoveredIndex(null);
     };
 
-    console.log(CompanyLogo)
+    CompanyLogo = CompanyLogo['CompanyLogo'];
 
     return(
         <div className="fixed top-0 left-1/2  -translate-x-1/2 mt-4 z-50 w-auto h-[60px] flex  items-center justify-between
@@ -48,7 +48,7 @@ export default function Navbar(CompanyLogo){
           src={CompanyLogo} 
           style={{ height: "60px", objectFit: "cover" }}
           alt="Company Logo" 
-          className="border rounded-full px-4 -ml-5 mr-3 py-4 transition-opacity duration-300"
+          className="border rounded-full px-2 py-2 -ml-6 mr-3 transition-opacity duration-300"
         />)}
           
           <div 

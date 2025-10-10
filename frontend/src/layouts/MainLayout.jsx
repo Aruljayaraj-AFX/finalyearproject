@@ -25,18 +25,15 @@ useEffect(() => {
   const checkUser = async () => {
     try {
       const securityRes = await 
-      fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-          headers: { Authorization: `Bearer ${activeToken}` },
-        });
+      fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check", {
+          headers: { Authorization: `Bearer ${activeToken}` }})
       const securityData = await securityRes.json();
-
-      
       if (!securityData?.email) {
         console.warn("Invalid security response, redirecting...");
         localStorage.removeItem("token");
         navigate("/");
         return;
-      }
+        }
 
       
       if (!clientLoaded) {

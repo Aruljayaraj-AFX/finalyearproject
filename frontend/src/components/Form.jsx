@@ -63,21 +63,30 @@ useEffect(() => {
 
       console.log("URL Token:", urltoken);
       console.log("Local Token:", localtoken);
-
       let activeToken = urltoken || localtoken;
+
       if (!activeToken) {
         navigate_check("/");
         return;
       }
 
-      if (urltoken && localtoken && urltoken !== localtoken) {
+      if((urltoken !== null && localtoken !== null && urltoken !== localtoken) || (!localtoken && urltoken)){
         console.log("Token mismatch → refreshing");
         localStorage.setItem("token", urltoken);
         activeToken = urltoken;
       }
+      if((!localtoken)&&(!urltoken)){
+        navigate("/");
+      }
+      if((localtoken)&&(!urltoken)){
+        console.log("only local");
+        activeToken= localtoken;
+      }
 
+      console.log(activeToken);
       const [securityRes, infoRes, detailRes] = await Promise.allSettled([
         fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
+          method: "GET",
           headers: { Authorization: `Bearer ${activeToken}` },
         }),
         fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/", {
@@ -89,11 +98,31 @@ useEffect(() => {
         }),
       ]);
 
-      const securityData = await securityRes.value.json();
-      if (!securityRes.value.ok|| !securityData?.email) {
-        console.warn("Invalid security response, redirecting...");
-        localStorage.removeItem(token);
-        navigate_check("/");
+      const securityData = await securityRes.value;
+      console.log(securityData);
+      
+      if (securityRes.status === 401) {
+        console.log("Unauthorized - invalid token or no token");
+        localStorage.removeItem("token");
+        navigate("/login");
+        return;
+      }
+      
+      if (securityRes.status === 500) {
+        if (securityData.message && securityData.message.includes("Signature has expired")) {
+          console.log("Token expired - redirecting to login");
+          localStorage.removeItem("token");
+          navigate("/login");
+          return;
+        } else {
+          console.error("Server error:", securityData.message || "Unknown 500 error");
+        }
+      }
+
+      if ((detailRes.status === 403)  && (infoRes.status === 403)){
+        console.log("Unauthorized - invalid token or no token");
+        localStorage.removeItem("token");
+        navigate("/login");
         return;
       }
 
@@ -114,6 +143,7 @@ useEffect(() => {
       if (infoData === "incomplete") {
         setIsLoaded(true);
       } else if (infoData === "complete") {
+        console.log("success")
         navigate("/Home");
       }
     } catch (err) {
