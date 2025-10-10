@@ -47,15 +47,15 @@ class user_Authorization(HTTPBearer):
         token = decode(credentials.credentials,role="CLIENT")
         print(token)
         try:
-            result = db.query(ClientTable).filter(ClientTable.client_email == token['email']).first()
+            result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
             db.close()
-            try:
-                if result:
-                    return token
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-        except:
-            raise HTTPException(status_code=403, detail="Invalid authorization code")    
+            if result:
+                return token
+        except HTTPException:
+            raise
+        except Exception as e:
+            print("DB error during authorization:", e)
+            raise HTTPException(status_code=500, detail="Internal authorization error")
         
 async def new_client(User_info,db):
     try:

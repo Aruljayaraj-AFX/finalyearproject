@@ -78,14 +78,14 @@ useEffect(() => {
 
       const [securityRes, infoRes, detailRes] = await Promise.allSettled([
         fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-          headers: { "Authorization": `Bearer ${activeToken}` },
+          headers: { Authorization: `Bearer ${activeToken}` },
         }),
         fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/", {
-          headers: { "Authorization": `Bearer ${activeToken}` },
+          headers: { Authorization: `Bearer ${activeToken}` },
         }),
         fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail", {
           method: "GET",
-          headers: { "Authorization": `Bearer ${activeToken}` },
+          headers: { Authorization: `Bearer ${activeToken}` },
         }),
       ]);
 

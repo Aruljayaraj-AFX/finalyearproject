@@ -26,7 +26,7 @@ useEffect(() => {
     try {
       const securityRes = await 
       fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-          headers: { "Authorization": `Bearer ${activeToken}` },
+          headers: { Authorization: `Bearer ${activeToken}` },
         });
       const securityData = await securityRes.json();
 
@@ -71,6 +71,8 @@ useEffect(() => {
   interval = setInterval(checkUser, 5000);
   return () => clearInterval(interval); 
 }, []);
+
+
     if (!isLoaded) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white">
