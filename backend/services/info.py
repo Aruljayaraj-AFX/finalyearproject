@@ -32,7 +32,7 @@ def access_token(email,fullname,role):
         payload={
             "email":email,
             "fullname":fullname,
-            "expire":expire
+            "exp":expire
         }
         return hashword(payload,role)
     except Exception as e:
