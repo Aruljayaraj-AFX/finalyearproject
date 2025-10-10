@@ -1,7 +1,8 @@
 from dotenv import load_dotenv 
 import os
-from jose import jwt,JWTError
+from jose import jwt
 from fastapi import HTTPException, status
+from jwt import ExpiredSignatureError, InvalidTokenError
 
 load_dotenv()
 
@@ -16,16 +17,19 @@ def hashword(token,role):
     else:
         return jwt.encode(token,secret_key2,algorithm=algorithm)
 
-def decode(token,role):
+def decode(token: str, role: str):
     try:
-        if role=="CLIENT":
-            return jwt.decode(token,secret_key1, algorithms=[algorithm])
+        if role == "CLIENT":
+            payload = jwt.decode(token, secret_key1, algorithms=[algorithm])
         else:
-            return jwt.decode(token,secret_key2, algorithms=[algorithm])
+            payload = jwt.decode(token, secret_key2, algorithms=[algorithm])
+        return payload
+
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Token has expired")
+
+    except InvalidTokenError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid token")
+
     except Exception as e:
-        raise HTTPException(status_code=500,detail=f"error={str(e)}")
-    except JWTError as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid or expired token: {str(e)}"
-        )
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Token decode error: {str(e)}")

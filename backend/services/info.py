@@ -31,7 +31,8 @@ def access_token(email,fullname,role):
         expire=datetime.utcnow()+timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTE)
         payload={
             "email":email,
-            "fullname":fullname
+            "fullname":fullname,
+            "expire":expire
         }
         return hashword(payload,role)
     except Exception as e:
