@@ -83,7 +83,7 @@ useEffect(() => {
       <main className="flex-1">
         <Outlet />
       </main>
-      <Footer />
+      <Footer clientcompanyname={clientcompanyname} client_slogan={client_slogan} />
     </div>
   );
 }

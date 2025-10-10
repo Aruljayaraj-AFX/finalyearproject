@@ -46,7 +46,7 @@ export default function Navbar(CompanyLogo){
          px-6 bg-[#EEE5FF] rounded-full select-none shadow-md">
           {showImage &&(<img 
           src={CompanyLogo} 
-          style={{ height: "60px", objectFit: "cover" }}
+          style={{ height: "60px",width : "60px", objectFit: "cover" }}
           alt="Company Logo" 
           className="border rounded-full px-2 py-2 -ml-6 mr-3 transition-opacity duration-300"
         />)}

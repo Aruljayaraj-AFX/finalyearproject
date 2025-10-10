@@ -4,13 +4,13 @@ import linkedin from "../assets/linkedin.png"
 import insta from "../assets/insta.png"
 import {Textfit} from "react-textfit"
 
-export default function Footer(){
+export default function Footer({ clientcompanyname, client_slogan }){
     return(
         <div className="w-full bg-black overflow-hidden">
             <div className="flex justify-between">
             <div className="flex flex-col">
             <div className="pt-20 px-20 ">
-                <h1 className="text-white font-bold text-5xl">A4orce</h1>
+                <h1 className="text-white font-bold text-5xl">{clientcompanyname}</h1>
                 <p className="text-white pt-4 text-sm">Your smart meeting assistant for better</p>
                 <p className="text-white pt-1 text-sm">notes, insights, and follow-up.</p>
                 <p className="text-white pt-4 text-sm">&copy; 2024 My Company. All rights reserved.</p>
