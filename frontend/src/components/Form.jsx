@@ -126,6 +126,7 @@ useEffect(() => {
         return;
       }
 
+      console.log(detailRes)
       const infoData = (infoRes.value.ok) ? await infoRes.value.json() : "incomplete";
       const detailData = (detailRes.value.ok) ? await detailRes.value.json() : {};
 
