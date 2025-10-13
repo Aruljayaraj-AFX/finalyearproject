@@ -27,3 +27,4 @@ PyJWT
 bleach
 gunicorn
 prometheus-fastapi-instrumentator
+asyncpg
