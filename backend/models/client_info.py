@@ -12,7 +12,7 @@ class ClientTable(Base):
     client_slogan = Column(Text,nullable=True)
     client_links = Column(JSON,nullable=True)
     client_name = Column(String(30),nullable=False)
-    clent_email = Column(String(30),nullable=False)
+    clent_email = Column(String(30),nullable=False,index=True)
     client_phone_no = Column(BigInteger,nullable=True)
     client_country = Column(String(20),nullable=True)
     client_State = Column(String(20),nullable=True)

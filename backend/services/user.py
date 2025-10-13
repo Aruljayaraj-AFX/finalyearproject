@@ -3,6 +3,9 @@ from schema.user_info import user_info
 from models.user_info import userTable
 from models.client_info import ClientTable
 from .info import generate_idno_user
+from sqlalchemy.future import select
+from sqlalchemy import func
+from sqlalchemy.ext.asyncio import AsyncSession
 
 async def new_user(user_data,db,token):
     try:
