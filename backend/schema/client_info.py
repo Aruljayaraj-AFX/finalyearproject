@@ -1,6 +1,7 @@
 from pydantic import BaseModel, constr
 from enum import Enum
 from typing import Optional, Dict
+from utils.data_santized import SanitizeModel
 
 class sig_type(str, Enum):
     GOOGLE = "GOOGLE"
@@ -11,17 +12,17 @@ class role(str,Enum):
     CLIENT = "CLIENT"
     USER = "USER"
 
-class User_info(BaseModel):
+class User_info(SanitizeModel):
     Email:str
     type_sig:sig_type
     fullname:str
     role: role
 
-class login_client(BaseModel):
+class login_client(SanitizeModel):
     email:str
     fullname:str
 
-class form_info_client(BaseModel):
+class form_info_client(SanitizeModel):
     logo:Optional[str] = None
     company_name:Optional[str] = None
     fullname:Optional[str]= None

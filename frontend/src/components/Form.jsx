@@ -37,32 +37,11 @@ const navigate = useNavigate();
   };
 
  useEffect(() => {
-    if (file) {
-      setImage(URL.createObjectURL(file));
-
-      const convert = async () => {
-        try {
-          const base64String = await fileToBase64(file);
-          setImage(base64String);
-          console.log("Base64:", base64String);
-        } catch (error) {
-          console.error("Error converting file:", error);
-        }
-      };
-
-      convert();
-    }
-  }, [file]);
-
-useEffect(() => {
   const fetchPingCheck = async () => {
     try {
       const queryParams = new URLSearchParams(location.search);
       const urltoken = queryParams.get("token");
       const localtoken = localStorage.getItem("token");
-
-      console.log("URL Token:", urltoken);
-      console.log("Local Token:", localtoken);
       let activeToken = urltoken || localtoken;
 
       if (!activeToken) {
@@ -70,91 +49,80 @@ useEffect(() => {
         return;
       }
 
-      if((urltoken !== null && localtoken !== null && urltoken !== localtoken) || (!localtoken && urltoken)){
+      if ((urltoken && localtoken && urltoken !== localtoken) || (!localtoken && urltoken)) {
         console.log("Token mismatch → refreshing");
         localStorage.setItem("token", urltoken);
         activeToken = urltoken;
       }
-      if((!localtoken)&&(!urltoken)){
-        navigate("/");
-      }
-      if((localtoken)&&(!urltoken)){
-        console.log("only local");
-        activeToken= localtoken;
-      }
 
-      console.log(activeToken);
-      const [securityRes, infoRes, detailRes] = await Promise.allSettled([
-        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check/", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${activeToken}` },
-        }),
-        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/", {
-          headers: { Authorization: `Bearer ${activeToken}` },
-        }),
-        fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${activeToken}` },
-        }),
+      const [infoRes, detailRes] = await Promise.all([
+        fetch(
+          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${activeToken}` },
+          }
+        ),
+        fetch(
+          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail/",
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${activeToken}` },
+          }
+        ),
       ]);
 
-      const securityData = await securityRes.value;
-      console.log(securityData);
-      
-      if (securityRes.status === 401) {
-        console.log("Unauthorized - invalid token or no token");
+      if (infoRes.status === 401) {
+        console.log("Unauthorized - invalid or missing token");
         localStorage.removeItem("token");
-        navigate("/login");
+        navigate("/");
         return;
       }
-      
-      if (securityRes.status === 500) {
-        if (securityData.message && securityData.message.includes("Signature has expired")) {
+
+      if (infoRes.status === 500) {
+        const infoErr = await infoRes.json().catch(() => ({}));
+        if (infoErr.message?.includes("Signature has expired")) {
           console.log("Token expired - redirecting to login");
           localStorage.removeItem("token");
-          navigate("/login");
+          navigate("/");
           return;
         } else {
-          console.error("Server error:", securityData.message || "Unknown 500 error");
+          console.error("Server error (info):", infoErr.message || "Unknown 500 error");
         }
       }
 
-      if ((detailRes.status === 403)  && (infoRes.status === 403)){
-        console.log("Unauthorized - invalid token or no token");
-        localStorage.removeItem("token");
-        navigate("/login");
-        return;
-      }
+      const infoData = infoRes.ok ? await infoRes.json() : "incomplete";
 
-      console.log(detailRes)
-      const infoData = (infoRes.value.ok) ? await infoRes.value.json() : "incomplete";
-      const detailData = (detailRes.value.ok) ? await detailRes.value.json() : {};
+      if (infoData === "incomplete" && detailRes.ok) {
+        const detailData = await detailRes.json();
+        
 
-      setImage(detailData.client_logo || null);
-      setName(detailData.client_name || "");
-      setCompanyName(detailData.client_company_name || "");
-      setDescription(detailData.client_description || "");
-      setSlogan(detailData.client_slogan || "");
-      setEmail(detailData.client_email || "");
-      setPhone(detailData.client_phoneno || "");
-      setCountry(detailData.client_country || "");
-      setState(detailData.client_state || "");
-      setDistrict(detailData.client_district || "");
+        setImage(detailData.client_logo || null);
+        setName(detailData.client_name || "");
+        setCompanyName(detailData.client_company_name || "");
+        setDescription(detailData.client_description || "");
+        setSlogan(detailData.client_slogan || "");
+        setEmail(detailData.client_email || "");
+        setPhone(detailData.client_phoneno || "");
+        setCountry(detailData.client_country || "");
+        setState(detailData.client_state || "");
+        setDistrict(detailData.client_district || "");
 
-      if (infoData === "incomplete") {
         setIsLoaded(true);
       } else if (infoData === "complete") {
-        console.log("success")
+        console.log("Profile already complete → redirecting to Home");
         navigate("/Home");
       }
     } catch (err) {
-      console.error("error:", err);
+      console.error("fetchPingCheck error:", err);
+      localStorage.removeItem("token");
       navigate_check("/");
     }
   };
 
   fetchPingCheck();
 }, []);
+
   
 if (!isLoaded) {
     return (
@@ -205,7 +173,7 @@ if (!isLoaded) {
 
     const data = await response.json().catch(() => ({}));
 
-    if (!response.ok) {
+    if (!response) {
       console.error("Validation Error:", data);
 
       if (data?.message?.includes("ProgramLimitExceeded") || 
@@ -273,7 +241,14 @@ if (!isLoaded) {
                 id="file-upload"
                 type="file"
                 accept="image/*"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={async (e) => {
+                  const selectedFile = e.target.files[0];
+                  if (selectedFile) {
+                    setFile(selectedFile);
+                    const base64String = await fileToBase64(selectedFile);
+                    setImage(base64String);
+                  }
+                }}
                 required
                 className="hidden"
               />
@@ -328,7 +303,6 @@ if (!isLoaded) {
               onBlur={() => setFocusedField("")}
               required
               disabled  
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
               className={inputClasses("email")}
             />
             <input
@@ -376,14 +350,13 @@ if (!isLoaded) {
             <button
   type="button"
   onClick={handleSubmit}
-  disabled={loading} // disable during submission
+  disabled={loading} 
   className={`relative flex items-center justify-center w-full h-12 px-6 rounded-xl text-white font-medium text-lg shadow-inner overflow-hidden group transition-colors duration-300
     ${loading ? "bg-gray-400 cursor-not-allowed" 
       : success ? "bg-green-500" 
       : errorform ? "bg-red-500" 
       : "bg-purple-500"}`}
 >
-  {/* Button Text */}
   <span className="z-10">
     {loading
       ? "Submitting..."
@@ -394,7 +367,6 @@ if (!isLoaded) {
       : "Submit"}
   </span>
 
-  {/* Animated arrow */}
   <div
     className={`absolute right-1 flex items-center justify-center h-10 w-10 bg-white rounded-lg shadow-lg transition-all duration-300
       group-hover:w-[calc(100%-0.5rem)]`}
@@ -415,7 +387,6 @@ if (!isLoaded) {
   </div>
 </button>
 
-{/* ✅ Show error message below button */}
 {errorform && (
   <p className="text-red-500 text-sm mt-2 text-center">{errorform}</p>
 )}

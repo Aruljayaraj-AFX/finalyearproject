@@ -11,9 +11,9 @@ export default function Footer({ clientcompanyname, client_slogan }){
             <div className="flex flex-col">
             <div className="pt-20 px-20 ">
                 <h1 className="text-white font-bold text-5xl">{clientcompanyname}</h1>
-                <p className="text-white pt-4 text-sm">Your smart meeting assistant for better</p>
-                <p className="text-white pt-1 text-sm">notes, insights, and follow-up.</p>
-                <p className="text-white pt-4 text-sm">&copy; 2024 My Company. All rights reserved.</p>
+                <p className="text-white pt-4 text-sm">{client_slogan}</p>
+                <p className="text-white pt-1 text-sm">ready, steady, and follow-up.</p>
+                <p className="text-white pt-4 text-sm">&copy; 2024 ZEALX. All rights reserved.</p>
             </div>
             <div className="flex px-20 pt-4 gap-3">
                 <button 
@@ -62,7 +62,7 @@ export default function Footer({ clientcompanyname, client_slogan }){
                     maskRepeat: 'no-repeat',
                     maskSize: '100% 100%'
                 }}
-                className="text-[#4A4957] text-[380px] font-[900] leading-none text-center">A4ORCE</Textfit>
+                className="text-[#4A4957] text-[380px] font-[900] leading-none text-center">{clientcompanyname}</Textfit>
                 </div>
             </div>
         </div>

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-
 import add from "../assets/add.png";
 import torch from "../assets/torch.png";
 import fan from "../assets/fan.png";
@@ -14,7 +13,6 @@ export default function Adduser() {
   const [torchOff, settorchOff] = useState(true);
   const [selectedButton, setSelectedButton] = useState(null);
   const [fanOn, setfanOn] = useState(false);
-
   const [users, setUsers] = useState([]);
   const [ID, setID] = useState("");
   const [ButtonName, setButtonName] = useState("");

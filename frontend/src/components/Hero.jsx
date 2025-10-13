@@ -17,6 +17,9 @@ import feature3 from "../assets/feature3.gif";
 import tutorial from "../assets/tutorial.png";
 import goal from "../assets/goal.png";
 import profile from "../assets/profile1.png"
+import { useContext } from "react";
+import { ClientContext } from "../layouts/MainLayout";
+
 
 export default function Hero(){
   const [torchOn, settorchOn] = useState(false);
@@ -29,7 +32,7 @@ export default function Hero(){
   const divRef = useRef(null);
   const [scale, setScale] = useState(1);
 
-  
+  const clientData = useContext(ClientContext);
 
   const handleClick = () => {
     Setac(!acon);
@@ -88,8 +91,8 @@ const syncReverseScroll1 = () => {
       <div className="absolute top-0 right-0 mt-3 mr-10 z-20">
         <img src={textslide} alt="profile" className="border-5 border-purple-800 bg-white rounded-full w-[60px] px-1 py-1 transition-opacity duration-300"/>  
       </div>
-      <div className="flex gap-2 mt-6 ml-19  z-20">
-        <img src={mail} className="w-7 h-7 pt-1"/><h1 className="text-2xl">NAME</h1>
+      <div className="flex items-center gap-2 mt-6 ml-19  z-20">
+        <img src={clientData.companylogo} style={{ height: "60px",width : "60px", objectFit: "cover" }}className="w-7 h-7 pt-1 rounded-full"/><h1 className="text-2xl">{clientData.name}</h1>
       </div>
       
       {/* hero */}

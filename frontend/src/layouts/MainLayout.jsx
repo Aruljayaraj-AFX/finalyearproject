@@ -2,8 +2,10 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useEffect,useState } from "react";
+import { useEffect,useState,createContext } from "react";
 import {useNavigate} from "react-router-dom"
+
+export const ClientContext = createContext(null);
 
 export default function MainLayout() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -28,6 +30,7 @@ useEffect(() => {
       fetch("https://finalyearproject-agw4.onrender.com/Growspire/v1/users/security_check", {
           headers: { Authorization: `Bearer ${activeToken}` }})
       const securityData = await securityRes.json();
+      console.log("ok");
       if (!securityData?.email) {
         console.warn("Invalid security response, redirecting...");
         localStorage.removeItem("token");
@@ -64,11 +67,10 @@ useEffect(() => {
     }
   };
 
-  checkUser();
-  interval = setInterval(checkUser, 5000);
-  return () => clearInterval(interval); 
+  checkUser(); 
 }, []);
 
+const clientData = { companylogo: client_logo, name: clientcompanyname };
 
     if (!isLoaded) {
     return (
@@ -78,6 +80,7 @@ useEffect(() => {
     );
   }
   return (
+    <ClientContext.Provider value={clientData}>
     <div className="min-h-screen flex flex-col">
       <Navbar CompanyLogo={client_logo}/>
       <main className="flex-1">
@@ -85,5 +88,6 @@ useEffect(() => {
       </main>
       <Footer clientcompanyname={clientcompanyname} client_slogan={client_slogan} />
     </div>
+    </ClientContext.Provider>
   );
 }

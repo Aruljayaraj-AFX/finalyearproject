@@ -18,3 +18,4 @@ class ClientTable(Base):
     client_State = Column(String(20),nullable=True)
     client_district = Column(String(20),nullable=True)
     created_by = Column(DateTime,default=func.now())
+
