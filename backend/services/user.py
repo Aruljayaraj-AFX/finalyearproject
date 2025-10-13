@@ -11,7 +11,7 @@ async def new_user(user_data,db,token):
             raise HTTPException(status_code=409, detail="Email already exists")
         all_user = db.query(userTable).all()
         existing_ids = {user.user_id for user in all_user}
-        user_id=generate_idno_user(existing_ids)
+        user_id=await generate_idno_user(existing_ids)
         result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
         if not result:
             raise HTTPException (status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
