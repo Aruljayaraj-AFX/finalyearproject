@@ -6,31 +6,51 @@ from .info import generate_idno_user
 from sqlalchemy.future import select
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
+import logging
 
-async def new_user(user_data,db,token):
+
+async def new_user(user_data, db: AsyncSession, token: dict):
     try:
-        existing = db.query(userTable).filter(userTable.user_Email == user_data.user_Email).first()
-        if existing:
+        result = await db.execute(select(userTable).where(userTable.user_Email == user_data.user_Email))
+        if result.scalar_one_or_none():
             raise HTTPException(status_code=409, detail="Email already exists")
-        all_user = db.query(userTable).all()
-        existing_ids = {user.user_id for user in all_user}
-        user_id=await generate_idno_user(existing_ids)
-        result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
-        if not result:
-            raise HTTPException (status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
-        client_id=result.client_id
-        role = "ADMIN"
-        new_user = userTable(client_id=client_id,user_id=user_id,Role=role,User_Name=user_data.User_Name,user_Email=user_data.user_Email,user_PhoneNo=user_data.user_PhoneNo,Address=user_data.Address,user_country=user_data.user_country,user_State=user_data.user_State,user_district=user_data.user_district)
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        return "new_user_added"
-    
-    except Exception as e:
-        raise HTTPException (status_code=status.HTTP_409_CONFLICT,detail=str(e))
-    except HTTPException as e:
-        raise
 
+        max_id_result = await db.execute(select(func.max(userTable.user_id)))
+        max_id = max_id_result.scalar() or 0
+        user_id = max_id + 1
+
+        client_result = await db.execute(select(ClientTable).where(ClientTable.clent_email == token['email']))
+        client = client_result.scalar_one_or_none()
+        if not client:
+            raise HTTPException(status_code=404, detail="Client not found")
+
+        new_user_obj = userTable(
+            client_id=client.client_id,
+            user_id=user_id,
+            Role="ADMIN",
+            User_Name=user_data.User_Name,
+            user_Email=user_data.user_Email,
+            user_PhoneNo=user_data.user_PhoneNo,
+            Address=user_data.Address,
+            user_country=user_data.user_country,
+            user_State=user_data.user_State,
+            user_district=user_data.user_district,
+        )
+
+        async with db.begin():
+            db.add(new_user_obj)
+
+        await db.refresh(new_user_obj)
+
+        return {"status": "success", "user_id": user_id, "message": "User created"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred"
+        )
 
 """async def update_user(User_info,db,token):
     try:
