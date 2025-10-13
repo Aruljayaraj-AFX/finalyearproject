@@ -25,3 +25,4 @@ httpx
 itsdangerous
 PyJWT
 bleach
+gunicorn
