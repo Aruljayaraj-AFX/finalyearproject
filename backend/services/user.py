@@ -4,20 +4,19 @@ from models.user_info import userTable
 from models.client_info import ClientTable
 from .info import generate_idno_user
 from sqlalchemy.exc import SQLAlchemyError
+import time
 
 async def new_user(user_data, db, token):
     try:
+        start=time.time()
         existing = db.query(userTable).filter(userTable.user_Email == user_data.user_Email).first()
+        all_user_ids = {u.user_id for u in db.query(userTable.user_id).all()}
+        end=time.time()
+        print(f"this execution time {start-end}")
         if existing:
             raise HTTPException(status_code=409, detail="Email already exists")
-
-        all_user_ids = {u.user_id for u in db.query(userTable.user_id).all()}
         user_id = generate_idno_user(all_user_ids)
-
-        client = db.query(ClientTable).filter(ClientTable.client_email == token['email']).first()
-        if not client:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
-
+        client = token['email']
         new_user_entry = userTable(
             client_id=client.client_id,
             user_id=user_id,

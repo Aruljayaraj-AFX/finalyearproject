@@ -29,7 +29,7 @@ def generate_idno(generate_id):
 async def generate_idno_user(generate_id):
     while True:
         random_number = random.randint(100000,999999)
-        id = "GS"+str(random_number)
+        id = "US"+str(random_number)
         if random_number not in generate_id:
             return id 
         

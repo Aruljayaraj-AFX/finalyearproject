@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Integer,String,Text,DateTime,func,BigInteger,JSON
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base,relationship
 
 Base = declarative_base()
 
 class ClientTable(Base):
-    __tablename__ = "Client_table"
+    __tablename__ = "client_table"
     client_id = Column(String(30),primary_key=True,index=True)
     client_logo = Column(Text,nullable=True,unique=True)
     client_company_name = Column(String(60),nullable=True)
@@ -18,4 +18,6 @@ class ClientTable(Base):
     client_State = Column(String(20),nullable=True)
     client_district = Column(String(20),nullable=True)
     created_by = Column(DateTime,default=func.now())
+
+    users = relationship("UserTable", back_populates="client")
 
