@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import {Link} from "react-router-dom";
+
 import add from "../assets/add.png";
 import torch from "../assets/torch.png";
 import fan from "../assets/fan.png";
@@ -13,10 +15,14 @@ export default function Adduser() {
   const [torchOff, settorchOff] = useState(true);
   const [selectedButton, setSelectedButton] = useState(null);
   const [fanOn, setfanOn] = useState(false);
+
   const [users, setUsers] = useState([]);
   const [ID, setID] = useState("");
   const [ButtonName, setButtonName] = useState("");
   const [AreaName, setAreaName] = useState("");
+
+  const [submit,setSubmit] = useState(false);
+  
 
   const areas = ["Kitchen", "Bedroom", "Hall", "Bathroom", "Corridor"];
   const buttons = ["Fan", "Light", "AC", "Motor", "Fridge", "TV"];
@@ -50,6 +56,13 @@ export default function Adduser() {
   useEffect(() => {
     console.log("Users updated:", users);
   }, [users]);
+
+  useEffect(()=>{
+    if (submit == true)
+    {
+      window.location.href = "http://localhost:5173/Clients/";
+    }
+  })
 
   const AnimatedText = ({ text, color = "black" }) => {
     return (
@@ -160,75 +173,81 @@ export default function Adduser() {
         <>
           <div className="relative z-20 flex flex-col items-center rounded-lg bg-white/60 p-6 w-[400px] shadow-lg overflow-hidden">
             <h1 className="text-2xl mb-4 font-semibold">New User</h1>
-            <div className="flex flex-col gap-3 w-full shadow-sm rounded-lg bg-gray-100/70">
-              {["App Name", "Email", "Phone no", "Address"].map((label, i) => (
+            <div className="flex flex-col w-full shadow-sm rounded-lg bg-gray-100/70">
                 <div
-                  key={i}
                   className="w-full flex hover:shadow-sm rounded-lg transition"
                 >
-                  <label className="flex items-center px-4 py-4">{label}</label>
+                  <label className="flex items-center px-4 py-4">User Name</label>
                   <input
                     type="text"
                     placeholder=" "
                     className="w-[220px] hover:border-b-2 px-4 mb-3 pt-4 focus:outline-none"
                   />
                 </div>
-              ))}
+                <div
+                  className="w-full flex hover:shadow-sm rounded-lg transition"
+                >
+                  <label className="flex items-center px-4 py-4 select-none">Email</label>
+                  <input
+                    type="text"
+                    placeholder=" "
+                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-11  focus:outline-none"
+                  />
+                </div>
+                <div
+                  className="w-full flex hover:shadow-sm rounded-lg transition"
+                >
+                  <label className="flex items-center px-4 py-4">Mobile</label>
+                  <input
+                    type="text"
+                    placeholder=" "
+                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-8 focus:outline-none"
+                  />
+                </div>
+                <div
+                  className="w-full flex hover:shadow-sm rounded-lg transition"
+                >
+                  <label className="flex items-center px-4 py-4">Address</label>
+                  <input
+                    type="text"
+                    placeholder=" "
+                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-6 focus:outline-none"
+                  />
+                </div>
+                <div
+                  className="w-full flex hover:shadow-sm rounded-lg transition"
+                >
+                  <label className="flex items-center px-4 py-4">Country</label>
+                  <input
+                    type="text"
+                    placeholder=" "
+                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-6 focus:outline-none"
+                  />
+                </div>
+                <div
+                  className="w-full flex hover:shadow-sm rounded-lg transition"
+                >
+                  <label className="flex items-center px-4 py-4">State</label>
+                  <input
+                    type="text"
+                    placeholder=" "
+                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-10.5 focus:outline-none"
+                  />
+                </div>
+                <div
+                  className="w-full flex hover:shadow-sm rounded-lg transition"
+                >
+                  <label className="flex items-center px-4 py-4">District</label>
+                  <input
+                    type="text"
+                    placeholder=" "
+                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-8.5 focus:outline-none"
+                  />
+                </div>
             </div>
-
-            <div className="relative flex items-center mt-6 mb-4 w-full">
-              <h1 className="mx-auto text-2xl font-semibold">Area</h1>
-            </div>
-
-            <div className="flex items-center justify-center overflow-hidden bg-gray-100/70 h-10 w-[350px] shadow-sm rounded-lg relative">
-              <div className="animate-verticaltextslide flex flex-col justify-center items-center">
-                {[...areas, ...areas].map((item, idx) => (
-                  <h1
-                    key={idx}
-                    className="text-xl font-light py-1 multi-gradient-text"
-                  >
-                    {item}
-                  </h1>
-                ))}
-              </div>
-              <button
-                onClick={() => {setHidden(true);setAreaName("");}}
-                className="absolute right-0 px-1 mr-1 py-1 text-gray-600 text-xs rounded-lg bg-gray-100/70 transition hover:text-gray-800"
-              >
-                <img src={add} alt="add" className="w-5" />
-              </button>
-            </div>
-
-            <div className="relative flex flex-col items-center mt-4 w-full">
-              <h2 className="text-xl font-semibold mb-2">Your Added Buttons</h2>
-              <div className="w-full bg-gray-100/70 rounded-lg shadow-sm p-2 flex flex-col gap-2 max-h-40 overflow-y-auto">
-                {users.length === 0 ? (
-                  <p className="text-sm text-gray-500 text-center">
-                    No buttons added yet
-                  </p>
-                ) : (
-                  users.map((btn, idx) => (
-                    <div
-                      key={btn.ID || idx}
-                      className="flex justify-between items-center px-3 py-2 bg-white rounded-md shadow-sm"
-                    >
-                      <span className="font-medium">{btn.ButtonName}</span>
-                      <span className="text-sm text-purple-600 font-semibold">
-                        {btn.ButtonType}
-                      </span>
-                      <span className="text-sm text-gray-600">
-                        ID: {btn.ID}
-                      </span>
-                      <span className="text-sm text-gray-500 italic">
-                        {btn.AreaName}
-                      </span>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            <button className="mt-4 w-full text-black shadow-sm py-2 rounded-lg bg-gray-100/70 transition">
+            <button 
+            onClick={()=>setSubmit(true)}
+              className="mt-4 w-full text-black shadow-sm py-2 rounded-lg bg-gray-100/70 transition">
               Submit
             </button>
           </div>
@@ -264,6 +283,35 @@ export default function Adduser() {
             <div className="relative flex items-center mt-6 mb-4 w-full">
               <h1 className="mx-auto text-2xl font-semibold">Buttons</h1>
             </div>
+
+            <div className="relative flex flex-col items-center mt-4 w-full">
+              <div className="w-full bg-gray-100/70 rounded-lg shadow-sm p-2 flex flex-col gap-2 max-h-40 overflow-y-auto">
+                {users.length === 0 ? (
+                  <p className="text-sm text-gray-500 text-center">
+                    No buttons added yet
+                  </p>
+                ) : (
+                  users.map((btn, idx) => (
+                    <div
+                      key={btn.ID || idx}
+                      className="flex justify-between items-center px-3 py-2 bg-white rounded-md shadow-sm"
+                    >
+                      <span className="font-medium">{btn.ButtonName}</span>
+                      <span className="text-sm text-purple-600 font-semibold">
+                        {btn.ButtonType}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        ID: {btn.ID}
+                      </span>
+                      <span className="text-sm text-gray-500 italic">
+                        {btn.AreaName}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
             <div className="flex items-center justify-center overflow-hidden bg-gray-100/70 h-10 w-[350px] shadow-sm rounded-lg relative">
               <div className="animate-verticaltextslide flex flex-col justify-center items-center">
                 {[...buttons, ...buttons].map((item, idx) => (

@@ -3,14 +3,16 @@ import user from "../assets/user.png";
 import searchuser from "../assets/searchuser.png";
 import { useState } from "react";
 import {Link} from "react-router-dom";
+import eye from "../assets/eye.png";
+import apps from "../assets/apps.png";
 
 export default function Clients() {
 
   const [users] = useState([
-    { name: "AK", role: "User", status: "Active", email: "akash0018ak@gmail.com" },
-    { name: "Abra", role: "Admin", status: "Active", email: "abra@gmail.com" },
-    { name: "Arul", role: "User", status: "Active", email: "afx001@gmail.com" },
-    { name: "Anbu", role: "Admin", status: "Pending", email: "anbulucks143@gmail.com" },
+    { name: "AK", role: "User",  email: "akash0018ak@gmail.com" },
+    { name: "Abra", role: "Admin",  email: "abra@gmail.com" },
+    { name: "Arul", role: "User",  email: "afx001@gmail.com" },
+    { name: "Anbu", role: "Admin", email: "anbulucks143@gmail.com" },
   ]);
 
   const [sortOrder, setSortOrder] = useState("asc");
@@ -73,21 +75,23 @@ export default function Clients() {
           </button>
           <h1 className="text-xl">G-MAIL</h1>
           <h1 className="text-xl pl-50">ROLE</h1>
-          <h1 className="text-xl pl-80">STATUS</h1>
+          <h1 className="text-xl pl-50">APPS</h1>
+          <h1 className="text-xl pl-40">ACTIONS</h1>
           
         </div>
 
         {/* User rows */}
         {filteredUsers.map((user, index) => (
           <div
-            className="grid grid-cols-5 items-center py-5 px-5 rounded-lg bg-white shadow-sm hover:bg-gray-200 cursor-pointer"
+            className="grid grid-cols-5 items-center py-5 px-5 rounded-lg bg-white shadow-sm hover:bg-gray-200 "
             key={index}
           ><>
+            
             <h1 className="text-xl font-medium pl-5 text-gray-800">{user.name}</h1>
             <h1 className="text-xl font-medium text-gray-800">{user.email}</h1>
             <h1 className="text-xl font-medium text-gray-800 pl-50">{user.role}</h1>
-            <h1 className="text-xl font-medium text-gray-800 pl-80">{user.status}</h1>
-            <button className="pl-50 text-3xl text-gray-800 hover:text-black">...</button>
+            <Link to="/Appshandle" className="pl-52 cursor-pointer"><img src={apps} alt="apps"className="w-5 h-5"/></Link>
+            <Link to="Userinfo" className="pl-48 cursor-pointer"><img src={eye} alt="open" className="w-5 h-5"/></Link>
           </>
           </div>
         ))}
