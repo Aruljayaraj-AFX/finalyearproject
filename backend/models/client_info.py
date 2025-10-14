@@ -19,5 +19,5 @@ class ClientTable(Base):
     client_district = Column(String(20),nullable=True)
     created_by = Column(DateTime,default=func.now())
 
-    users = relationship("UserTable", back_populates="client")
+    users = relationship("userTable", back_populates="client")
 
