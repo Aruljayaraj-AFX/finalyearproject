@@ -14,7 +14,7 @@ async def new_user(user_data, db, token):
         all_user_ids = {u.user_id for u in db.query(userTable.user_id).all()}
         user_id = generate_idno_user(all_user_ids)
 
-        client = db.query(ClientTable).filter(ClientTable.client_email == token['email']).first()
+        client = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
         if not client:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
 
