@@ -109,9 +109,9 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                             "message": message,
                             "token": token
                             }
-                            frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                            frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode(params)}"
                             return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Form?token={token}"
+                    frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?token={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
@@ -132,11 +132,11 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                             "message": message,
                             "token": token
                             }
-                            frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                            frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode(params)}"
                             return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Form?token={token}"
+                    frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?token={token}"
                     return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/?error={message}"
+                frontend_url = f"https://finalyearproject-kxdi.vercel.app/?error={message}"
                 return RedirectResponse(url=frontend_url)
     elif act_test == "login":
         try:
@@ -156,19 +156,19 @@ async def auth_google(request:Request,db=Depends(get_DB)):
                             "message": message,
                             "token": token
                         }
-                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Form?token={token}"
+                frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=response.get("message", "Login failed"))
         except HTTPException as e:
             message = e.detail
-            frontend_url = f"http://localhost:5173/?error={message}"
+            frontend_url = f"https://finalyearproject-kxdi.vercel.app/?error={message}"
             return RedirectResponse(url=frontend_url)
         except Exception as e:
             message = str(e)
-            frontend_url = f"http://localhost:5173/?error={message}"
+            frontend_url = f"https://finalyearproject-kxdi.vercel.app/?error={message}"
             return RedirectResponse(url=frontend_url)
         
 oauth2 = OAuth()
@@ -235,9 +235,9 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                             "message": message,
                             "token": token
                         }
-                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Form?token={token}"
+                    frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?token={token}"
                     return RedirectResponse(url=frontend_url)
         except HTTPException as e:
             message = e.detail
@@ -258,17 +258,17 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                             "message": message,
                             "token": token
                         }
-                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Form?token={token}"
+                    frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?token={token}"
                     return RedirectResponse(url=frontend_url)
             else:
-                frontend_url = f"http://localhost:5173/?error={message}"
+                frontend_url = f"https://finalyearproject-kxdi.vercel.app/?error={message}"
                 return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during GitHub signup:", e)
             message = "Internal Server Error"
-        frontend_url = f"http://localhost:5173/Form?{urlencode({'error': message})}"
+        frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode({'error': message})}"
         return RedirectResponse(url=frontend_url)
 
     elif act_test == "login":
@@ -289,18 +289,18 @@ async def github_callback(request: Request, db: Session = Depends(get_DB)):
                             "message": message,
                             "token": token
                         }
-                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Form?token={token}"
+                frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
-            frontend_url = f"http://localhost:5173/?'error'= {e.detail}"
+            frontend_url = f"https://finalyearproject-kxdi.vercel.app/?'error'= {e.detail}"
             return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during GitHub login:", e)
-            frontend_url = f"http://localhost:5173/?'error'= {'Internal Server Error'}"
+            frontend_url = f"https://finalyearproject-kxdi.vercel.app/?'error'= {'Internal Server Error'}"
             return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")
 
@@ -377,13 +377,13 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                             "message": message,
                             "token": token
                         }
-                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                    frontend_url = f"http://localhost:5173/Form?'token'= {token}"
+                    frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?'token'= {token}"
                     return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during Facebook signup:", e)
-            frontend_url = f"http://localhost:5173/Form?'error'={'Internal Server Error'}"
+            frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?'error'={'Internal Server Error'}"
             return RedirectResponse(url=frontend_url)
     elif act_test == "login":
         try:
@@ -403,19 +403,19 @@ async def facebook_callback(request: Request, db: Session = Depends(get_DB)):
                             "message": message,
                             "token": token
                         }
-                        frontend_url = f"http://localhost:5173/Form?{urlencode(params)}"
+                        frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?{urlencode(params)}"
                         return RedirectResponse(url=frontend_url)
-                frontend_url = f"http://localhost:5173/Form?token={token}"
+                frontend_url = f"https://finalyearproject-kxdi.vercel.app/Form?token={token}"
                 return RedirectResponse(url=frontend_url)
             else:
                 raise HTTPException(status_code=400, detail=login_resp.get("message", "Login failed"))
         except HTTPException as e:
             params = {"error": e.detail}
-            frontend_url = f"http://localhost:5173/?{urlencode(params)}"
+            frontend_url = f"https://finalyearproject-kxdi.vercel.app/?{urlencode(params)}"
             print(e)
             return RedirectResponse(url=frontend_url)
         except Exception as e:
             print("Unexpected error during Facebook login:", e)
-            frontend_url = f"http://localhost:5173/?'error'={'Internal Server Error'}"
+            frontend_url = f"https://finalyearproject-kxdi.vercel.app/?'error'={'Internal Server Error'}"
             return RedirectResponse(url=frontend_url)
     raise HTTPException(status_code=400, detail="Invalid action")
