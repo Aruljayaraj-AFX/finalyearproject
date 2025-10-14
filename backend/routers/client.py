@@ -40,7 +40,7 @@ async def read(token: object = Depends(user_Authorization())):
 async def new_client_reg(User_info:User_info,db=Depends(get_DB)):
     return await new_client(User_info,db)
 
-@router.post("/login_client")
+@router.get("/login_client")
 async def login_client(login_info:login_client,db=Depends(get_DB)):
     return await login_cli(login_info.email,login_info.fullname,db)
 
