@@ -121,7 +121,7 @@ async def info_cli(db, token):
             "client_logo": result.client_logo,
             "client_company_name": result.client_company_name,
             "client_name": result.client_name,
-            "client_email": result.token['email'],
+            "client_email": token['email'],
             "client_phoneno": result.client_phone_no,
             "client_country": result.client_country,
             "client_state": result.client_State,
