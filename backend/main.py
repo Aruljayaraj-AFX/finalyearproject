@@ -43,7 +43,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     )
 
 
-app.include_router(router,prefix="/Growspire/v1/users_dashboard",tags=["Basics_business_dashboard"])
+app.include_router(router,prefix="/Growspire/v1/users",tags=["Basics_business_dashboard"])
 app.include_router( router_user_handle,prefix="/Growspire/v1/Business_users",tags=["business_users_Crud"])
 
 if __name__ == "__main__":
