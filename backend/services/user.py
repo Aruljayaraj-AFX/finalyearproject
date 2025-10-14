@@ -4,6 +4,8 @@ from models.user_info import userTable
 from models.client_info import ClientTable
 from .info import generate_idno_user
 from sqlalchemy.exc import SQLAlchemyError
+import traceback
+import sys
 
 async def new_user(user_data, db, token):
     try:
@@ -14,9 +16,7 @@ async def new_user(user_data, db, token):
         all_user_ids = {u.user_id for u in db.query(userTable.user_id).all()}
         user_id = await generate_idno_user(all_user_ids)
 
-        client = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
-        if not client:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
+        client = token['email']
 
         new_user_entry = userTable(
             client_id=client.client_id,
@@ -44,3 +44,38 @@ async def new_user(user_data, db, token):
         raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+async def update_user(user_data,db,token):
+    try:
+        result=db.query(userTable).filter(userTable.user_Email == user_data.user_Email).first()
+        result.User_Nane = user_data.User_Name
+        result.user_Email = user_data.user_Email
+        result.user_PhoneNO = user_data.user_PhoneNo
+        result.Address = user_data.Address
+        result.user_district = user_data.district
+        result.user_State  = user_data.user_State
+        result.user_country = user_data.user_country
+        db.commit()
+        db.close()
+        return "successfully_update"
+    except Exception as e:
+        db.rollback()
+        traceback.print_exc(file=sys.stdout)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"form update error: {repr(e)}")
+    except HTTPException:
+        raise
+
+async def delete_user(user_id,db,token):
+    try:
+        result = db.query(userTable).filter(userTable.user_id == user_id).first()
+        if not result:
+            raise HTTPException(status_code=404, detail="Client not found")
+        db.delete(result)
+        db.commit()
+        return "delete_successfully"
+    except Exception as e:
+        db.rollback()
+        traceback.print_exc(file=sys.stdout)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"form update error: {repr(e)}")
+    except HTTPException:
+        raise
