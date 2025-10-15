@@ -61,11 +61,11 @@ export default function Form() {
 
         const [infoRes, detailRes] = await Promise.allSettled([
           fetchWithTimeout(
-            "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_check/",
+            "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/client_info_check/",
             { method: "GET", headers }
           ),
           fetchWithTimeout(
-            "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/client_info_detail/",
+            "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/client_info_detail/",
             { method: "GET", headers }
           ),
         ]);
@@ -174,7 +174,7 @@ if (!isLoaded) {
 
     try {
       const response = await fetch(
-        "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/newclient_form_update",
+        "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/newclient_form_update",
         {
           method: "PUT",
           headers: {
