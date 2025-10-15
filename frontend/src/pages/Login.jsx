@@ -66,7 +66,7 @@ const handleStartSignIn = (e) => {
       setTimeout(() => {
          setIsLoaded(true)
         window.location.href =
-          "https://finalyearproject-kxdi.vercel.app/Growspire/v1/users/login/google?act=login";
+          "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/login/google?act=login";
       }, 100); 
     };
     if (activeFacebook == true){
@@ -130,7 +130,7 @@ const handleStartSignUp = (e) => {
       setTimeout(() => {
          setIsLoaded(true)
         window.location.href =
-          "https://finalyearproject-kxdi.vercel.app/Growspire/v1/users/login/google?act=signup";
+          "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/login/google?act=signup";
       }, 100); 
     };
     if (activeFacebook == true){
