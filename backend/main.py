@@ -13,7 +13,7 @@ app = FastAPI()
 
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("SESSION_SECRET", "super-secret-key"))
 
-origins = ["http://localhost:5173"]
+origins = ["http://localhost:5173","https://finalyearproject-kxdi.vercel.app"]
 
 app.add_middleware(
     CORSMiddleware,
