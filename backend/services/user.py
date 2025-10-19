@@ -65,9 +65,9 @@ async def update_user(user_data,db,token):
     except HTTPException:
         raise
 
-async def delete_user(user_id,db,token):
+async def delete_user(user_email,db,token):
     try:
-        result = (db.query(userTable).join(ClientTable, userTable.client_id == ClientTable.client_id).filter(userTable.user_id == user_id).filter(ClientTable.clent_email == token['email']).first())
+        result = (db.query(userTable).join(ClientTable, userTable.client_id == ClientTable.client_id).filter(userTable.user_Email == user_email).filter(ClientTable.clent_email == token['email']).first())
         if not result:
             raise HTTPException(status_code=404, detail="Client not found")
         db.delete(result)
