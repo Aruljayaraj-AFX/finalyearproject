@@ -52,7 +52,7 @@ async def update_user(user_data,db,token):
         result.user_Email = user_data.user_Email
         result.user_PhoneNO = user_data.user_PhoneNo
         result.Address = user_data.Address
-        result.user_district = user_data.district
+        result.user_district = user_data.user_district
         result.user_State  = user_data.user_State
         result.user_country = user_data.user_country
         db.commit()
