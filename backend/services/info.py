@@ -56,7 +56,7 @@ class user_Authorization(HTTPBearer):
         print(token)
         try:
             token = decode(credentials.credentials, role="CLIENT")
-            return token
+            return token  
         except Exception as e:
             print("Token decode error:", e)
             raise HTTPException(status_code=401, detail="Invalid or expired token")
