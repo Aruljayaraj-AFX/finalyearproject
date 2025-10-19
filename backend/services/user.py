@@ -67,15 +67,23 @@ async def update_user(user_data,db,token):
 
 def delete_user(user_email: str, db, token: dict):
     try:
-        user = (db.query(userTable).join(ClientTable, userTable.client_id == ClientTable.client_id).filter(userTable.user_Email == user_email).filter(ClientTable.clent_email == token['email']) .first())
+        user = (
+            db.query(userTable)
+            .join(ClientTable, userTable.client_id == ClientTable.client_id)
+            .filter(userTable.user_Email == user_email)
+            .filter(ClientTable.clent_email == token['email'])
+            .first()
+        )
         if not user:
-            raise HTTPException(status_code=404, detail="Client not found")
+            return {"status": "error", "detail": "Client not found"}
+
         db.delete(user)
         db.commit()
-        return "delete_successfully"
-    except HTTPException:
-        raise
+        return {"status": "success", "detail": "delete_successfully"}
+
     except Exception as e:
         db.rollback()
+        # Print full traceback to Vercel logs
         traceback.print_exc(file=sys.stdout)
-        raise HTTPException(status_code=500,detail=f"Delete operation failed: {repr(e)}")
+        # Return error details in response
+        return {"status": "error", "detail": f"Delete operation failed: {repr(e)}"}
