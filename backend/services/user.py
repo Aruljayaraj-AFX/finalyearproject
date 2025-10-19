@@ -35,7 +35,7 @@ async def new_user(user_data, db, token):
         db.commit()
         db.refresh(new_user_entry)
 
-        return {"status": "success", "user_id": new_user_entry.user_id}
+        return  "success_new_user_added"
 
     except HTTPException:
         raise
