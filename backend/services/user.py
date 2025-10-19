@@ -16,7 +16,7 @@ async def new_user(user_data, db, token):
         all_user_ids = {u.user_id for u in db.query(userTable.user_id).all()}
         user_id = await generate_idno_user(all_user_ids)
 
-        client = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()~
+        client = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
 
         new_user_entry = userTable( 
             client_id=client.client_id,
