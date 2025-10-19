@@ -1,6 +1,6 @@
 from sqlalchemy import Column,ARRAY,String,Text,DateTime,func,BigInteger,ForeignKey
 from sqlalchemy.orm import declarative_base,relationship
-from client_info import Base
+from .client_info import Base
 
 class userTable(Base):
     __tablename__ = "user_table"
