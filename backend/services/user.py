@@ -48,7 +48,7 @@ async def new_user(user_data, db, token):
 async def update_user(user_data,db,token):
     try:
         result=db.query(userTable).filter(userTable.user_Email == user_data.user_Email).first()
-        result.User_Nane = user_data.User_Name
+        result.User_Name = user_data.User_Name
         result.user_Email = user_data.user_Email
         result.user_PhoneNO = user_data.user_PhoneNo
         result.Address = user_data.Address
