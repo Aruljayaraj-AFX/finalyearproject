@@ -65,17 +65,17 @@ async def update_user(user_data,db,token):
     except HTTPException:
         raise
 
-async def delete_user(user_email,db,token):
+def delete_user(user_email: str, db, token: dict):
     try:
-        result = (db.query(userTable).join(ClientTable, userTable.client_id == ClientTable.client_id).filter(userTable.user_Email == user_email).filter(ClientTable.clent_email == token['email']).first())
-        if not result:
+        user = (db.query(userTable).join(ClientTable, userTable.client_id == ClientTable.client_id).filter(userTable.user_Email == user_email).filter(ClientTable.clent_email == token['email']) .first())
+        if not user:
             raise HTTPException(status_code=404, detail="Client not found")
-        db.delete(result)
+        db.delete(user)
         db.commit()
         return "delete_successfully"
-    except Exception as e:
-        db.rollback()
-        traceback.print_exc(file=sys.stdout)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"form update error: {repr(e)}")
     except HTTPException:
         raise
+    except Exception as e:
+        db.rollback()
+        traceback.print_exc()
+        raise HTTPException(status_code=500,detail=f"Delete operation failed: {repr(e)}")
