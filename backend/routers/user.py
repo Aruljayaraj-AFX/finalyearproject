@@ -19,8 +19,8 @@ async def update_user_handle(Data:user_info,db=Depends(get_DB),token: object = D
     return await update_user(Data,db,token)
 
 @router_user_handle.delete("/delete_user")
-async def delete_user_handle(user_id:str,db=Depends(get_DB),token: object = Depends(user_Authorization())):
-    return await delete_user(user_id,db,token)
+async def delete_user_handle(user_email:str,db=Depends(get_DB),token: object = Depends(user_Authorization())):
+    return await delete_user(user_email,db,token)
 
 """@router_user_handle.get("/user_info")
 async def get_user_handle(user_id:str,db=Depends(get_DB),token: object = Depends(user_Authorization())):
