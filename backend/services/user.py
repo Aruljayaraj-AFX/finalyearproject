@@ -77,5 +77,5 @@ def delete_user(user_email: str, db, token: dict):
         raise
     except Exception as e:
         db.rollback()
-        traceback.print_exc()
+        traceback.print_exc(file=sys.stdout)
         raise HTTPException(status_code=500,detail=f"Delete operation failed: {repr(e)}")
