@@ -27,7 +27,7 @@ useEffect(() => {
   const checkUser = async () => {
     try {
       const securityRes = await 
-      fetch("https://finalyearproject-alpha.vercel.app/Growspire/v1/users/security_check", {
+      fetch("https://finalyearproject-alpha.vercel.app/Growspire/v1/users/security_check/", {
           headers: { Authorization: `Bearer ${activeToken}` }})
       const securityData = await securityRes.json();
       console.log("ok");

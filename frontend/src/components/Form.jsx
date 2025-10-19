@@ -61,11 +61,11 @@ export default function Form() {
 
         const [infoRes, detailRes] = await Promise.allSettled([
           fetchWithTimeout(
-            "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/client_info_check/",
+            "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/client_info_check",
             { method: "GET", headers }
           ),
           fetchWithTimeout(
-            "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/client_info_detail/",
+            "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/client_info_detail",
             { method: "GET", headers }
           ),
         ]);
