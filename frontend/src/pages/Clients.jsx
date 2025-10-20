@@ -1,7 +1,7 @@
 import ap from "../assets/ap.jpg";
 import user from "../assets/user.png";
 import searchuser from "../assets/searchuser.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {Link} from "react-router-dom";
 import eye from "../assets/eye.png";
 import apps from "../assets/apps.png";
@@ -31,7 +31,7 @@ export default function Clients() {
       if (sortOrder === "asc") return a.name.localeCompare(b.name);
       return b.name.localeCompare(a.name);
     });
-
+ 
   return (
     <div 
     id="clients"
