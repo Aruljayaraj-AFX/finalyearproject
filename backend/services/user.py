@@ -6,7 +6,6 @@ from .info import generate_idno_user
 from sqlalchemy.exc import SQLAlchemyError
 import traceback
 import sys
-import math
 
 async def new_user(user_data, db, token):
     try:
@@ -93,7 +92,7 @@ async def get_detail(pagination:int,size_data:int,db,token):
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
         total_rows = db.query(userTable).count()
-        total_pages = math.ceil(total_rows / size_data) if size_data else 1
+        total_pages = total_rows / size_data
         offset_value = (pagination - 1) * size_data
         data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(size_data).all())
         return {

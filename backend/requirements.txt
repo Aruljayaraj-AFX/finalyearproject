@@ -28,4 +28,3 @@ bleach
 gunicorn
 prometheus-fastapi-instrumentator
 asyncpg
-math
