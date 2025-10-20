@@ -51,7 +51,7 @@ class user_Authorization(HTTPBearer):
     async def __call__(self, request: Request , db: Session = Depends(get_DB)):
         credentials: HTTPAuthorizationCredentials = await super(user_Authorization, self).__call__(request)
         if not credentials:
-            raise HTTPException(status_code=403, detail="Invalid egsegfs aauthorization code")
+            raise HTTPException(status_code=401, detail="Invalid authorization code")
         token = decode(credentials.credentials,role="CLIENT")
         print(token)
         try:

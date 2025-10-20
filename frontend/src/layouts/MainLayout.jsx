@@ -26,6 +26,18 @@ useEffect(() => {
   let interval;
   const checkUser = async () => {
     try {
+      const securityRes = await 
+      fetch("https://finalyearproject-alpha.vercel.app/Growspire/v1/users/security_check/", {
+          headers: { Authorization: `Bearer ${activeToken}` }})
+      const securityData = await securityRes.json();
+      console.log("ok");
+      if (!securityData?.email) {
+        console.warn("Invalid security response, redirecting...");
+        localStorage.removeItem("token");
+        navigate("/");
+        return;
+        }
+
       
       if (!clientLoaded) {
         const detailRes = await fetch(
