@@ -65,7 +65,7 @@ export default function Clients() {
           ? totalPagesRaw
           : Math.ceil(totalPagesRaw);
 
-        console.log("Total Pages:", totalPages);
+        console.log("Total Pages:", totalPages,totalPagesRaw);
       } else {
         console.error("Pagination fetch failed:", pag_info.reason);
         navigate("/");
