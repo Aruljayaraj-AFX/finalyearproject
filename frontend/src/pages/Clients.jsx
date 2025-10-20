@@ -2,24 +2,22 @@ import ap from "../assets/ap.jpg";
 import user from "../assets/user.png";
 import searchuser from "../assets/searchuser.png";
 import { useEffect, useState } from "react";
-import {Link} from "react-router-dom";
+import {Link,useNavigate} from "react-router-dom";
 import eye from "../assets/eye.png";
 import apps from "../assets/apps.png";
 
 export default function Clients() {
-
+  const navigate = useNavigate();
   const [users] = useState([
     { name: "AK", role: "User",  email: "akash0018ak@gmail.com" },
     { name: "Abra", role: "Admin",  email: "abra@gmail.com" },
     { name: "Arul", role: "User",  email: "afx001@gmail.com" },
     { name: "Anbu", role: "Admin", email: "anbulucks143@gmail.com" },
   ]);
-
   const [sortOrder, setSortOrder] = useState("asc");
   const handleSort = () => {
     setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
   };
-
   const [search, setSearch] = useState("");
   const filteredUsers = users
     .filter(
@@ -31,6 +29,44 @@ export default function Clients() {
       if (sortOrder === "asc") return a.name.localeCompare(b.name);
       return b.name.localeCompare(a.name);
     });
+  useEffect(()=>{
+    let totalPages;
+    const fetchData = async () => {
+      try{
+        const activeToken = localStorage.getItem("token");
+        if (!activeToken) {
+          navigate("/");
+          return;
+        }
+        const headers = { Authorization: `Bearer ${activeToken}` };
+        const [pag_info,table_info] = await Promise.allSettled([
+          fetchWithTimeout(
+            "https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/pag_info",
+            { method: "GET", headers }
+          ),
+          fetchWithTimeout(
+            "https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/user_info",
+            { method: "GET", headers }
+          ),
+        ]);
+        if (pag_info.status === "fulfilled") {
+          const data = await pag_info.value.json();
+          const totalPagesRaw = data["totalpages"];
+          if (!Number.isInteger(value)) {
+            totalPages=Math.ceil(totalPagesRaw) + totalPagesRaw; 
+            console.log(totalPages)
+          }
+        } else {
+          console.error("Pagination fetch failed:", pag_info.reason);
+          navigate("/");
+        }
+      }
+      catch (err) {
+        console.error("fetchClientInfo error:", err);
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+    }}, [navigate]);
   return (
     <div 
     id="clients"
