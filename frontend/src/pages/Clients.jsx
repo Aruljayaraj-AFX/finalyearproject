@@ -29,45 +29,57 @@ export default function Clients() {
       if (sortOrder === "asc") return a.name.localeCompare(b.name);
       return b.name.localeCompare(a.name);
     });
-  useEffect(()=>{
-    let totalPages;
-    const fetchData = async () => {
-      try{
-        const activeToken = localStorage.getItem("token");
-        if (!activeToken) {
-          navigate("/");
-          return;
-        }
-        const headers = { Authorization: `Bearer ${activeToken}` };
-        const [pag_info,table_info] = await Promise.allSettled([
-          fetchWithTimeout(
-            "https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/pag_info",
-            { method: "GET", headers }
-          ),
-          fetchWithTimeout(
-            "https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/user_info",
-            { method: "GET", headers }
-          ),
-        ]);
-        if (pag_info.status === "fulfilled") {
-          const data = await pag_info.value.json();
-          const totalPagesRaw = data["totalpages"];
-          if (!Number.isInteger(value)) {
-            totalPages=Math.ceil(totalPagesRaw) + totalPagesRaw; 
-            console.log(totalPages)
-          }
-        } else {
-          console.error("Pagination fetch failed:", pag_info.reason);
-          navigate("/");
-        }
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const activeToken = localStorage.getItem("token");
+      if (!activeToken) {
+        navigate("/");
+        return;
       }
-      catch (err) {
-        console.error("fetchClientInfo error:", err);
-        localStorage.removeItem("token");
+      const headers = { Authorization: `Bearer ${activeToken}` };
+
+      const [pag_info, table_info] = await Promise.allSettled([
+        fetchWithTimeout(
+          "https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/pag_info",
+          { method: "GET", headers }
+        ),
+        fetchWithTimeout(
+          "https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/user_info",
+          { method: "GET", headers }
+        ),
+      ]);
+
+      if (pag_info.status === "fulfilled") {
+        const data = await pag_info.value.json();
+        const totalPagesRaw = data["totalpages"];
+        let totalPages = Number.isInteger(totalPagesRaw)
+          ? totalPagesRaw
+          : Math.ceil(totalPagesRaw);
+
+        console.log("Total Pages:", totalPages);
+      } else {
+        console.error("Pagination fetch failed:", pag_info.reason);
         navigate("/");
       }
-      fetchData();
-    }}, [navigate]);
+
+      if (table_info.status === "fulfilled") {
+        const userData = await table_info.value.json();
+        console.log("User Data:", userData);
+      } else {
+        console.error("User info fetch failed:", table_info.reason);
+      }
+
+    } catch (err) {
+      console.error("fetchClientInfo error:", err);
+      localStorage.removeItem("token");
+      navigate("/");
+    }
+  };
+
+  fetchData();
+}, [navigate]);
+
   return (
     <div 
     id="clients"
