@@ -152,8 +152,16 @@ export default function Clients() {
           </div>
         ))}
       </div>
-      <div className="flex justify-center">
-        <p className="border">2</p>
+      <div className="flex justify-center gap-2 mt-5">
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            className="px-3 py-1 border rounded hover:bg-gray-200"
+            onClick={() => console.log("Go to page", i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
       </div>
     </div>
   );
