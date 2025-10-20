@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {Link,useNavigate} from "react-router-dom";
 import eye from "../assets/eye.png";
 import apps from "../assets/apps.png";
-import fetchWithTimeout from "../components/Form.jsx"
 
 export default function Clients() {
   const navigate = useNavigate();
@@ -30,6 +29,14 @@ export default function Clients() {
       if (sortOrder === "asc") return a.name.localeCompare(b.name);
       return b.name.localeCompare(a.name);
     });
+  const fetchWithTimeout = (url, options, timeout = 8000) =>
+    Promise.race([
+      fetch(url, options),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timeout")), timeout)
+      ),
+    ]);
+    
  useEffect(() => {
   const fetchData = async () => {
     try {
