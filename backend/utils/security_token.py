@@ -32,4 +32,4 @@ def decode(token: str, role: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid token")
 
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_401_INTERNAL_SERVER_ERROR,detail=f"Token decode error: {str(e)}")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail=f"Token decode error: {str(e)}")
