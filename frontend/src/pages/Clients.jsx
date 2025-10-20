@@ -66,6 +66,7 @@ export default function Clients() {
         localStorage.removeItem("token");
         navigate("/");
       }
+      fetchData();
     }}, [navigate]);
   return (
     <div 
