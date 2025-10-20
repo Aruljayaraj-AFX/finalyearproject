@@ -152,7 +152,7 @@ export default function Clients() {
           </div>
         ))}
       </div>
-      <div>
+      <div className="flex justify-center">
         <p className="border">2</p>
       </div>
     </div>
