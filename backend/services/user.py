@@ -96,8 +96,8 @@ async def get_detail(pagination:int,size_data:int,db,token):
         offset_value = (pagination - 1) * size_data
         data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(size_data).all())
         return {
+            "totalpages":total_pages,
             "data":[
-                "totalpages":total_pages
                 {"user_name": row.User_Name, "user_email": row.user_Email}
                 for row in data
             ]
