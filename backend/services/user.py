@@ -6,6 +6,7 @@ from .info import generate_idno_user
 from sqlalchemy.exc import SQLAlchemyError
 import traceback
 import sys
+import math
 
 async def new_user(user_data, db, token):
     try:
