@@ -36,7 +36,7 @@ export default function Clients() {
         setTimeout(() => reject(new Error("Request timeout")), timeout)
       ),
     ]);
-    
+
  useEffect(() => {
   const fetchData = async () => {
     try {
