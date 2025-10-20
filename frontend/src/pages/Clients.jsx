@@ -31,7 +31,19 @@ export default function Clients() {
       if (sortOrder === "asc") return a.name.localeCompare(b.name);
       return b.name.localeCompare(a.name);
     });
- 
+useEffect(()=>{
+  try {
+      const response = await fetch(
+        "https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/user_info?pagination",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        }
+      );
+}})
   return (
     <div 
     id="clients"

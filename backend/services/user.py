@@ -86,22 +86,32 @@ async def delete_user(user_email: str, db, token: dict):
         traceback.print_exc(file=sys.stdout)
         return {"status": "error", "detail": f"Delete operation failed: {repr(e)}"}
     
-async def get_detail(pagination:int,size_data:int,db,token):
+async def get_detail(pagination:int,db,token):
     try:
         result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
-        total_rows = db.query(userTable).count;()
-        total_pages = total_rows / size_data
-        offset_value = (pagination - 1) * size_data
-        data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(size_data).all())
+        offset_value = (pagination - 1) * 10
+        data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(10).all())
         return {
-            "totalpages":total_pages,
             "data":[
                 {"name": row.User_Name, "role":"Admin","email": row.user_Email}
                 for row in data
             ]
         }
+    except HTTPException as e:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"retrival error: {repr(e)}")
+    
+async def get_pag(db,token):
+    try:
+        result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
+        total_rows = db.query(userTable).count;()
+        total_pages = (total_rows / 10)
+        return {"totalpages":total_pages}
     except HTTPException as e:
         raise
     except Exception as e:
