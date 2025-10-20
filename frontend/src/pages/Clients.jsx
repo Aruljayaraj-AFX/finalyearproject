@@ -9,10 +9,10 @@ import apps from "../assets/apps.png";
 export default function Clients() {
 
   const [users] = useState([
-    { name: "AK", role: "User",  email: "akash0018ak@gmail.com" },
-    { name: "Abra", role: "Admin",  email: "abra@gmail.com" },
-    { name: "Arul", role: "User",  email: "afx001@gmail.com" },
-    { name: "Anbu", role: "Admin", email: "anbulucks143@gmail.com" },
+    { name: "AK",   email: "akash0018ak@gmail.com" },
+    { name: "Abra",   email: "abra@gmail.com" },
+    { name: "Arul",   email: "afx001@gmail.com" },
+    { name: "Anbu",  email: "anbulucks143@gmail.com" },
   ]);
 
   const [sortOrder, setSortOrder] = useState("asc");
@@ -76,7 +76,6 @@ export default function Clients() {
             USER {sortOrder === "asc" ? "↑" : "↓"}
           </button>
           <h1 className="text-xl">G-MAIL</h1>
-          <h1 className="text-xl pl-50">ROLE</h1>
           <h1 className="text-xl pl-50">APPS</h1>
           <h1 className="text-xl pl-40">ACTIONS</h1>
           
@@ -91,7 +90,6 @@ export default function Clients() {
             
             <h1 className="text-xl font-medium pl-5 text-gray-800">{user.name}</h1>
             <h1 className="text-xl font-medium text-gray-800">{user.email}</h1>
-            <h1 className="text-xl font-medium text-gray-800 pl-50">{user.role}</h1>
             <Link to="/Appshandle" className="pl-52 cursor-pointer"><img src={apps} alt="apps"className="w-5 h-5"/></Link>
             <Link to="Userinfo" className="pl-48 cursor-pointer"><img src={eye} alt="open" className="w-5 h-5"/></Link>
           </>
