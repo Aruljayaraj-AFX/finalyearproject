@@ -91,10 +91,13 @@ async def get_detail(pagination:int,size_data:int,db,token):
         result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
+        total_rows = db.query(userTable).count()
+        total_pages = math.ceil(total_rows / size_data) if size_data else 1
         offset_value = (pagination - 1) * size_data
         data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(size_data).all())
         return {
             "data":[
+                "totalpages":total_pages
                 {"user_name": row.User_Name, "user_email": row.user_Email}
                 for row in data
             ]
