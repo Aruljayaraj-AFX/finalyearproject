@@ -76,7 +76,7 @@ export default function Appshandle() {
       {/* Table-like layout */}
       <div className="flex m-16 mt-15 gap-5 z-20 px-5 items-center justify-center">
       {Addapp===false && (
-      <div className="relative flex justify-center bg-gray-100 w-[400px] h-[400px] rounded-xl  relative shadow-lg">
+      <div className="flex justify-center bg-gray-100 w-[400px] h-[400px] rounded-xl  relative shadow-lg">
         <div className="flex flex-col ">
         <div
          className="flex items-center justify-center w-[400px] h-[200px] mt-3  rounded-full overflow-hidden relative"
