@@ -65,7 +65,7 @@ async def update_user(user_data,db,token):
     except HTTPException:
         raise
 
-def delete_user(user_email: str, db, token: dict):
+async def delete_user(user_email: str, db, token: dict):
     try:
         user = (
             db.query(userTable)
