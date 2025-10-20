@@ -110,3 +110,14 @@ body {
   scrollbar-width: none;     /* Firefox */
 }
 
+@keyframes arrowMove {
+  0% {
+    opacity: 0;
+    margin-left: 0px;
+  }
+  100% {
+    opacity: 1;
+    margin-left: 10px;
+  }
+}
+

@@ -89,9 +89,6 @@ export default function Profile() {
 
         {/* Name & Role */}
         <h1 className="text-3xl font-bold text-gray-900">{user.name}</h1>
-        <span className="mt-2 px-4 py-1 bg-violet-100 text-violet-700 rounded-full text-sm font-medium">
-          {user.role}
-        </span>
 
         {/* Divider */}
         <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent my-8" />

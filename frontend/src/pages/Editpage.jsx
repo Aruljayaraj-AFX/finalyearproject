@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import apps from "../assets/apps.png";
+import area from "../assets/area.png";
 
-export default function Adduser() {
+export default function Editpage() {
   
   const canvasRef = useRef(null);
   useEffect(() => {
@@ -86,87 +88,38 @@ export default function Adduser() {
       />
       <div className="absolute top-1/4 left-1/6 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
       <div className="absolute top-1 right-1/9 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
-          <div className="relative z-20 flex flex-col items-center rounded-lg bg-white/60 p-6 w-[400px] shadow-lg overflow-hidden">
-            <h1 className="text-2xl mb-4 font-semibold">New User</h1>
+          <div className="relative z-20 flex flex-col  rounded-lg bg-white/60 p-6 w-[400px] shadow-lg overflow-hidden">
+            <h1 className="flex justify-start text-2xl mb-4 font-semibold ">App Name</h1>
             <div className="flex flex-col w-full shadow-sm rounded-lg bg-gray-100/70">
                 <div
                   className="w-full flex hover:shadow-sm rounded-lg transition"
                 >
-                  <label className="flex items-center px-4 py-4">User Name</label>
+                  <label className="flex items-center px-4 py-4"><img src={apps} className="w-5"/></label>
                   <input
                     type="text"
-                    placeholder=" "
-                    className="w-[220px] hover:border-b-2 px-4 mb-3 pt-4 focus:outline-none"
-                  />
-                </div>
-                <div
-                  className="w-full flex hover:shadow-sm rounded-lg transition"
-                >
-                  <label className="flex items-center px-4 py-4 select-none">Email</label>
-                  <input
-                    type="text"
-                    placeholder=" "
-                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-11  focus:outline-none"
-                  />
-                </div>
-                <div
-                  className="w-full flex hover:shadow-sm rounded-lg transition"
-                >
-                  <label className="flex items-center px-4 py-4">Mobile</label>
-                  <input
-                    type="text"
-                    placeholder=" "
-                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-8 focus:outline-none"
-                  />
-                </div>
-                <div
-                  className="w-full flex hover:shadow-sm rounded-lg transition"
-                >
-                  <label className="flex items-center px-4 py-4">Address</label>
-                  <input
-                    type="text"
-                    placeholder=" "
-                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-6 focus:outline-none"
-                  />
-                </div>
-                <div
-                  className="w-full flex hover:shadow-sm rounded-lg transition"
-                >
-                  <label className="flex items-center px-4 py-4">Country</label>
-                  <input
-                    type="text"
-                    placeholder=" "
-                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-6 focus:outline-none"
-                  />
-                </div>
-                <div
-                  className="w-full flex hover:shadow-sm rounded-lg transition"
-                >
-                  <label className="flex items-center px-4 py-4">State</label>
-                  <input
-                    type="text"
-                    placeholder=" "
-                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-10.5 focus:outline-none"
-                  />
-                </div>
-                <div
-                  className="w-full flex hover:shadow-sm rounded-lg transition"
-                >
-                  <label className="flex items-center px-4 py-4">District</label>
-                  <input
-                    type="text"
-                    placeholder=" "
-                    className="w-[220px] hover:border-b-2 px-4 mb-3 ml-8.5 focus:outline-none"
+                    placeholder=""
+                    className="w-[220px] hover:border-b-2 px-4 mb-3 pt-4 ml-14.5 focus:outline-none"
                   />
                 </div>
             </div>
-            <button 
-              onClick={()=>window.history.back()}
-              className="mt-4 w-full text-black shadow-sm py-2 rounded-lg bg-gray-100/70 transition">
-              Submit
-            </button>
+            <h1 className="flex justify-start text-2xl mb-4 mt-4 font-semibold ">Area</h1>
+            <div className="flex flex-col w-full shadow-sm rounded-lg bg-gray-100/70">
+                <div
+                  className="w-full flex hover:shadow-sm rounded-lg transition"
+                >
+                  <label className="flex items-center px-4 py-4"><img src={area} className="w-5"/></label>
+                  <input
+                    type="text"
+                    placeholder=""
+                    className="w-[220px] hover:border-b-2 px-4 mb-3 pt-4 ml-14.5 focus:outline-none"
+                  />
+                </div>
+            </div>
+            <div className="flex justify-center mt-6 gap-5 ">
+                <button onClick={()=>window.history.back()} className="hover:bg-red-200 bg-gray-100/70 rounded-sm p-1 px-2 border border-gray-200">Cancel</button>
+                <button onClick={()=>window.history.back()} className="hover:bg-green-200 bg-gray-100/70 rounded-sm p-1 px-2 border border-gray-200">Done</button>
+            </div>
           </div>
-        
     </div>
   );
 }

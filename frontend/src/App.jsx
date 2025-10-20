@@ -6,6 +6,9 @@ import Adduser from "./pages/Adduser.jsx";
 import Profile from "./pages/Profile.jsx";
 import Userinfo from "./pages/Userinfo.jsx";
 import Appshandle from "./pages/Appshandle.jsx";
+import Appsform from "./pages/Appsform.jsx";
+import Editpage from "./pages/Editpage.jsx";
+import Button from "./pages/Button.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -18,6 +21,9 @@ export default function App() {
         <Route path="/Form" element={<Form />} />
         <Route path="/Clients/Adduser" element={<Adduser/>} />
         <Route path="/Clients/Userinfo" element={<Userinfo/>} />
+        <Route path="/Appshandle/Appsform" element={<Appsform/>} />
+        <Route path="/Appshandle/Appsform/Editpage" element={<Editpage/>} />
+        <Route path="/Appshandle/Appsform/Button" element={<Button/>} />
         <Route path="/Profile" element={<Profile/>} />
         <Route element={<MainLayout />}>
           <Route path="/home" element={<Home/>} />

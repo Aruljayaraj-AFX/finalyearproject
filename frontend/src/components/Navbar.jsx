@@ -1,6 +1,5 @@
-import mail from "../assets/mail.svg"
+import { useNavigate , useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { Link , useLocation } from "react-router-dom";
 
 export default function Navbar(CompanyLogo) {
     const [showImage, setImage] = useState(false);
@@ -51,6 +50,35 @@ export default function Navbar(CompanyLogo) {
 
     CompanyLogo = CompanyLogo['CompanyLogo'];
 
+    const scrollToSection = (id) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+const navigate = useNavigate();
+
+const handleClick = (item) => {
+  const targetId = item.toLowerCase();
+
+  // If the section exists on the current page, scroll
+  const element = document.getElementById(targetId);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth" });
+  } else {
+    // Navigate to home page first, then scroll after slight delay
+    if(location.pathname !== "/home"){
+    navigate("/home"); 
+    }
+    else{
+        navigate("/clients")
+    }
+    setTimeout(() => {
+      const el = document.getElementById(targetId);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 200); // give time for page to render
+  }
+};
     return (
         <div className={`fixed top-0 left-1/2 -translate-x-1/2 mt-3 z-50 w-auto h-[50px] flex items-center justify-between
          px-6 ${navBg} rounded-full select-none shadow-md`}>
@@ -58,9 +86,9 @@ export default function Navbar(CompanyLogo) {
             {showImage && (
                 <img
                     src={CompanyLogo} 
-                    style={{ height: "60px",width : "60px", objectFit: "cover" }}
+                    style={{ height: "40px",width : "40px", objectFit: "cover" }}
                     alt="Company Logo" 
-                    className="border rounded-full px-2 py-2 -ml-6 mr-3 transition-opacity duration-300"
+                    className="border rounded-full px-2 py-2 -ml-4  mr-3 transition-opacity duration-300"
                 />
             )}
 
@@ -77,18 +105,18 @@ export default function Navbar(CompanyLogo) {
                     }}
                 />
                 {menuItems.map((item, index) => (
-                    <Link
+                    <span
                         key={item}
-                        to={item === "CLIENTS" ? "/Clients" : "/" }
                         ref={el => itemRefs.current[index] = el}
                         className="text-lg px-4 -ml-4.5 rounded-full cursor-pointer transition-colors duration-300 relative z-10"
                         style={{
                             color: hoveredIndex === index ? hoverTextColor : defaultTextColor
                         }}
                         onMouseEnter={() => setHoveredIndex(index)}
+                    onClick={()=>handleClick(item)}
                     >
                         {item}
-                    </Link>
+                    </span>
                 ))}
             </div>
 
@@ -98,6 +126,7 @@ export default function Navbar(CompanyLogo) {
                     backgroundColor: buttonBg,
                     color: buttonText
                 }}
+                onClick={() => scrollToSection("contact")}
             >
                 <span className="inline-flex">
                     {'CONTACT'.split('').map((letter, index) => (

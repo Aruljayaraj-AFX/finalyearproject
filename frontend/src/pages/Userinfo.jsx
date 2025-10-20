@@ -4,7 +4,7 @@ import waste from "../assets/waste.png";
 
 export default function Userinfo() {
 
-  const [clear,setClear] = useState("false");
+  const [clear,setClear] = useState(false);
 
   const canvasRef = useRef(null);
   useEffect(() => {

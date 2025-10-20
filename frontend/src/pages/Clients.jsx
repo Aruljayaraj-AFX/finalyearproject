@@ -33,7 +33,9 @@ export default function Clients() {
     });
 
   return (
-    <div className="min-h-screen flex relative flex-col ">
+    <div 
+    id="clients"
+    className="min-h-screen flex relative flex-col ">
       
       <div
         className="absolute inset-0"
