@@ -83,7 +83,23 @@ async def delete_user(user_email: str, db, token: dict):
 
     except Exception as e:
         db.rollback()
-        # Print full traceback to Vercel logs
         traceback.print_exc(file=sys.stdout)
-        # Return error details in response
         return {"status": "error", "detail": f"Delete operation failed: {repr(e)}"}
+    
+async def get_detail(pagination:int,size_data:int,db,token):
+    try:
+        result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
+        offset_value = (pagination - 1) * size_data
+        data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(size_data).all())
+        return {
+            "data":[
+                {"user_name": row.User_Name, "user_email": row.user_Email}
+                for row in data
+            ]
+        }
+    except HTTPException as e:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"retrival error: {repr(e)}")

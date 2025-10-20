@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from services.info import user_Authorization
 from sqlalchemy.orm import Session
 from database.db import get_DB
-from services.user import new_user,update_user,delete_user
+from services.user import new_user,update_user,delete_user,get_detail
 from schema.user_info import user_info
 
 load_dotenv()
@@ -22,6 +22,6 @@ async def update_user_handle(Data:user_info,db=Depends(get_DB),token: object = D
 async def delete_user_handle(user_email:str,db=Depends(get_DB),token: object = Depends(user_Authorization())):
     return await delete_user(user_email,db,token)
 
-"""@router_user_handle.get("/user_info")
-async def get_user_handle(user_id:str,db=Depends(get_DB),token: object = Depends(user_Authorization())):
-    return await get_detail(user_id,db,token)"""
+@router_user_handle.get("/user_info")
+async def get_user_handle(pagination:int,size_data:int,db=Depends(get_DB),token: object = Depends(user_Authorization())):
+    return await get_detail(pagination,size_data,db,token)
