@@ -38,7 +38,11 @@ export default function Clients() {
  useEffect(() => {
   const fetchData = async () => {
     try {
-      const activeToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFydWxqYXlhcmFqajgyNkBnbWFpbC5jb20iLCJmdWxsbmFtZSI6IkFydWwgamF5YXJhaiIsImV4cCI6MTc2MTYzOTE0MX0.mHzYVrvR90nBA5laLI8W3jqDwbDRjXwQcHeupcIpEaU";
+      const activeToken = localStorage.getItem("token");
+      if (!activeToken) {
+        navigate("/");
+        return;
+      }
       const headers = { Authorization: `Bearer ${activeToken}` };
 
       const [pag_info,table_info] = await Promise.allSettled([
@@ -60,6 +64,7 @@ export default function Clients() {
       else 
       {
         console.error("Pagination fetch failed:", pag_info.reason);
+        navigate("/");
       }
       if (table_info.status === "fulfilled") {
         const userData = await table_info.value.json();
@@ -67,15 +72,17 @@ export default function Clients() {
         console.log("User Data:", userData.data);
       } else {
         console.error("User info fetch failed:", table_info.reason);
+        navigate("/");
       }
     } catch (err) {
       console.error("fetchClientInfo error:", err);
       localStorage.removeItem("token");
+      navigate("/");
     }
   };
 
   fetchData();
-}, []);
+}, [currentPage,navigate]);
 
   return (
     <div id="clients" className="min-h-screen flex relative flex-col ">
