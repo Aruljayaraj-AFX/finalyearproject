@@ -124,7 +124,7 @@ async def get_pag(db,token):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"retrival error: {repr(e)}")
 
-def get_user_detail(email: str, db, token: dict):
+async def get_user_detail(email: str, db, token: dict):
     try:
         query = (db.query(userTable).join(ClientTable, userTable.client_id == ClientTable.client_id).filter(ClientTable.clent_email == token.get('email'),userTable.user_Email == email).first())
         if not query:
