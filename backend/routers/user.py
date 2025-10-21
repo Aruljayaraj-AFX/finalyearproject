@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from services.info import user_Authorization
 from sqlalchemy.orm import Session
 from database.db import get_DB
-from services.user import new_user,update_user,delete_user,get_detail,get_pag
+from services.user import new_user,update_user,delete_user,get_detail,get_pag,get_user_detail
 from schema.user_info import user_info
 
 load_dotenv()
@@ -29,3 +29,7 @@ async def get_pag_handle(db=Depends(get_DB),token: object = Depends(user_Authori
 @router_user_handle.get("/user_info")
 async def get_user_handle(pagination:int,db=Depends(get_DB),token: object = Depends(user_Authorization())):
     return await get_detail(pagination,db,token)
+
+@router_user_handle.get("/user_particular_info")
+async def get_user_handle(email:int,db=Depends(get_DB),token: object = Depends(user_Authorization())):
+    return await get_user_detail(email,db,token)

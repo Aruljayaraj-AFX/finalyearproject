@@ -92,7 +92,11 @@ async def get_detail(pagination:int,db,token):
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
         offset_value = (pagination - 1) * 10
-        data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(10).all())
+        data = db.query(userTable)\
+         .filter(userTable.client_id == result.client_id)\
+         .offset(offset_value)\
+         .limit(10)\
+         .all()
         if data:
             return {
                 "data":[
@@ -119,3 +123,4 @@ async def get_pag(db,token):
         raise
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"retrival error: {repr(e)}")
+    
