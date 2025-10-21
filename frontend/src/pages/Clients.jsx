@@ -70,6 +70,7 @@ export default function Clients() {
       }
       if (table_info.status === "fulfilled") {
         const userData = await table_info.value.json();
+        console.log(userData);
         if(userData.data === "No Data"){
           console.log("no data");
         }
