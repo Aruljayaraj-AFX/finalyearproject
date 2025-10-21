@@ -71,8 +71,9 @@ export default function Clients() {
       if (table_info.status === "fulfilled") {
         const userData = await table_info.value.json();
         console.log(userData);
-        if(userData.data === "No Data"){
+        if(userData === "No Data"){
           console.log("no data");
+          setusers([]);
         }
         else{
         setusers(userData.data)
@@ -147,6 +148,10 @@ export default function Clients() {
               <div className="h-6 bg-gray-300 rounded w-10 ml-40"></div>
             </div>
           ))
+        ) : filteredUsers.length === 0 ? (
+          <div className="py-10 text-center text-gray-500 text-xl col-span-5">
+            No Clients Found
+          </div>
         ) : (
           filteredUsers.map((user, index) => (
             <div
