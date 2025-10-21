@@ -91,8 +91,8 @@ async def get_detail(pagination:int,db,token):
         result = db.query(ClientTable).filter(ClientTable.clent_email == token['email']).first()
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
-        offset_value = (pagination - 1) * 10
-        data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(10).all())
+        offset_value = (pagination - 1) * 1
+        data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(1).all())
         return {
             "data":[
                 {"name": row.User_Name, "role":"Admin","email": row.user_Email}
@@ -110,7 +110,7 @@ async def get_pag(db,token):
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
         total_rows = db.query(userTable).count()
-        total_pages = total_rows/10
+        total_pages = total_rows/1
         return {"totalpages":total_pages}
     except HTTPException as e:
         raise
