@@ -70,8 +70,13 @@ export default function Clients() {
       }
       if (table_info.status === "fulfilled") {
         const userData = await table_info.value.json();
+        if(userData.data === "No Data"){
+          console.log("no data");
+        }
+        else{
         setusers(userData.data)
         console.log("User Data:", userData.data);
+        }
       } else {
         console.error("User info fetch failed:", table_info.reason);
         navigate("/");

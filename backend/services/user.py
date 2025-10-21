@@ -93,12 +93,15 @@ async def get_detail(pagination:int,db,token):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
         offset_value = (pagination - 1) * 10
         data = (db.query(userTable.User_Name,userTable.user_Email).offset(offset_value).limit(10).all())
-        return {
-            "data":[
-                {"name": row.User_Name, "role":"Admin","email": row.user_Email}
-                for row in data
-            ]
-        }
+        if data:
+            return {
+                "data":[
+                    {"name": row.User_Name, "role":"Admin","email": row.user_Email}
+                    for row in data
+                ]
+            }
+        else:
+            return "No Data"
     except HTTPException as e:
         raise
     except Exception as e:
