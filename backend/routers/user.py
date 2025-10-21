@@ -31,5 +31,5 @@ async def get_user_handle(pagination:int,db=Depends(get_DB),token: object = Depe
     return await get_detail(pagination,db,token)
 
 @router_user_handle.get("/user_part_info")
-async def get_user_handle(email:int,db=Depends(get_DB),token: object = Depends(user_Authorization())):
+async def get_user_handle(email:str,db=Depends(get_DB),token: object = Depends(user_Authorization())):
     return await get_user_detail(email,db,token)
