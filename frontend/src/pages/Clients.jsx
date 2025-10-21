@@ -164,9 +164,9 @@ export default function Clients() {
               <Link to="/Appshandle" className="pl-52 cursor-pointer">
                 <img src={apps} alt="apps" className="w-5 h-5" />
               </Link>
-              <Link to="Userinfo" className="pl-48 cursor-pointer">
-                <img src={eye} alt="open" className="w-5 h-5" />
-              </Link>
+              <Link to="Userinfo" state={{ encodedEmail: btoa(user.email) }} className="pl-48 cursor-pointer">
+                  <img src={eye} alt="open" className="w-5 h-5" />
+                </Link>
             </div>
           ))
         )}
