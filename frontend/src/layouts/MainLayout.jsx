@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom"
 export const ClientContext = createContext(null);
 
 export default function MainLayout() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
   const [client_logo, setCompanyLogo] = useState(null);
   const [client_name, setName] = useState(null);
   const [clientcompanyname, setCompanyName] = useState(null);
@@ -22,6 +22,7 @@ export default function MainLayout() {
   const navigate = useNavigate();
   const activeToken = localStorage.getItem("token");
   const [clientLoaded, setClientLoaded] = useState(false);
+  
 useEffect(() => {
   let interval;
   const checkUser = async () => {
