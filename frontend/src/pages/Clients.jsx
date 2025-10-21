@@ -12,6 +12,7 @@ export default function Clients() {
   const navigate = useNavigate();
   const [totalPages,settotalpages]=useState();
   const[currentPage,setcurrentpage]=useState(1);
+  const [loading, setLoading] = useState(true);
   const [users,setusers] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
   const handleSort = () => {setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));};
@@ -38,6 +39,7 @@ export default function Clients() {
  useEffect(() => {
   const fetchData = async () => {
     try {
+      setLoading(true);
       const activeToken = localStorage.getItem("token");
       if (!activeToken) {
         navigate("/");
@@ -78,6 +80,9 @@ export default function Clients() {
       console.error("fetchClientInfo error:", err);
       localStorage.removeItem("token");
       navigate("/");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -123,17 +128,37 @@ export default function Clients() {
           <h1 className="text-xl pl-50">APPS</h1>
           <h1 className="text-xl pl-40">ACTIONS</h1>  
         </div>
-        {filteredUsers.map((user, index) => (
-          <div className="grid grid-cols-5 items-center py-5 px-5 rounded-lg bg-white shadow-sm hover:bg-gray-200 " key={index}>
-            <>
+        {loading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-5 items-center py-5 px-5 rounded-lg bg-white shadow-sm animate-pulse"
+            >
+              <div className="h-6 bg-gray-300 rounded w-3/4 ml-5"></div>
+              <div className="h-6 bg-gray-300 rounded w-5/6"></div>
+              <div className="h-6 bg-gray-300 rounded w-2/3"></div>
+              <div className="h-6 bg-gray-300 rounded w-10 ml-40"></div>
+              <div className="h-6 bg-gray-300 rounded w-10 ml-40"></div>
+            </div>
+          ))
+        ) : (
+          filteredUsers.map((user, index) => (
+            <div
+              className="grid grid-cols-5 items-center py-5 px-5 rounded-lg bg-white shadow-sm hover:bg-gray-200"
+              key={index}
+            >
               <h1 className="text-xl font-medium pl-5 text-gray-800">{user.name}</h1>
               <h1 className="text-xl font-medium text-gray-800">{user.email}</h1>
               <h1 className="text-xl font-medium text-gray-800 pl-50">{user.role}</h1>
-              <Link to="/Appshandle" className="pl-52 cursor-pointer"><img src={apps} alt="apps"className="w-5 h-5"/></Link>
-              <Link to="Userinfo" className="pl-48 cursor-pointer"><img src={eye} alt="open" className="w-5 h-5"/></Link>
-            </>
-          </div>
-        ))}
+              <Link to="/Appshandle" className="pl-52 cursor-pointer">
+                <img src={apps} alt="apps" className="w-5 h-5" />
+              </Link>
+              <Link to="Userinfo" className="pl-48 cursor-pointer">
+                <img src={eye} alt="open" className="w-5 h-5" />
+              </Link>
+            </div>
+          ))
+        )}
       </div>
       <div className="flex justify-center items-center z-1 gap-2 m-5">
         <button
