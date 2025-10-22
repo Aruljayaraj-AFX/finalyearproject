@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import username from "../assets/username.gif";
 import back from "../assets/back.png";
-import error1 from "../assets/error.png"
+import errorImg from "../assets/error.png"
 
 export default function Adduser() {
   const [loading, setLoading] = useState(false);
@@ -348,7 +348,7 @@ export default function Adduser() {
             )}
             {error && (
               <span className="flex m-6 gap-3 text-red-600 font-semibold">
-                <img src={error1} alt="error" className="w-6 h-6"></img>
+                <img src={errorImg} alt="error" className="w-6 h-6"></img>
                 {error}
               </span>
             )}
