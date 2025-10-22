@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate,useLocation } from "react-router-dom";
 import username from "../assets/username.gif";
 import back from "../assets/back.png";
-import error1 from "../assets/error.png"
+import errorImg from "../assets/error.png"
 import waste from "../assets/waste1.png";
-import waste1 from "../assets/waste2.png";
+import wasteImg from "../assets/waste2.png";
 import mailcontact from "../assets/mailcontact.png";
 import cancel from "../assets/cancel.png"
 
@@ -377,7 +377,7 @@ const delete_user = async () => {
               delete
               <div className="absolute left-0 mx-1 flex justify-center items-center group-hover:bg-white bg-gray-800 w-[25px] h-[25px] rounded-full">
                 <img src={waste} alt="delete_button" className="w-5 h-5 group-hover:hidden"/>
-                <img src={waste1} alt="delete_button_hover" className="w-5 h-5 hidden group-hover:block"/>
+                <img src={wasteImg} alt="delete_button_hover" className="w-5 h-5 hidden group-hover:block"/>
               </div>
               </button>
               <button 
@@ -442,7 +442,7 @@ const delete_user = async () => {
             )}
             {error && (
               <span className="flex m-6 gap-3 text-red-600 font-semibold">
-                <img src={error1} alt="error" className="w-6 h-6"></img>
+                <img src={errorImg} alt="error" className="w-6 h-6"></img>
                 {error}
               </span>
             )}
@@ -497,7 +497,7 @@ const delete_user = async () => {
                 delete
                 <div className="absolute right-0 mx-1 flex justify-center items-center group-hover:bg-white bg-gray-800 w-[25px] h-[25px] rounded-full">
                   <img src={waste} alt="delete_button" className="w-5 h-5 group-hover:hidden"/>
-                  <img src={waste1} alt="delete_button_hover" className="w-5 h-5 hidden group-hover:block"/>
+                  <img src={wasteImg} alt="delete_button_hover" className="w-5 h-5 hidden group-hover:block"/>
                 </div>
               </>
             )}
