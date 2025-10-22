@@ -16,7 +16,7 @@ export default function Adduser() {
   const email = encodedEmail ? atob(encodedEmail) : null;
   const navigate = useNavigate();
   const[User_Name,setusername]=useState("");
-  const[activetoken,setactivetoken]=useState("");
+  const[activeToken,setactivetoken]=useState("");
   const[user_Email,setemail]=useState("");
   const[user_PhoneNo,setphoneno]=useState("");
   const[Address,setaddress]=useState("");
