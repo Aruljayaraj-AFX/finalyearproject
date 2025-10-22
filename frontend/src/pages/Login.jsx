@@ -73,14 +73,14 @@ const handleStartSignIn = (e) => {
       setTimeout(() => {
          setIsLoaded(true)
         window.location.href =
-          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/facebook?act=login";
+          "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/login/facebook?act=login";
       }, 100); 
     };
     if (activeApple == true){
       setTimeout(() => {
          setIsLoaded(true)
         window.location.href =
-          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/github?act=login";
+          "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/login/github?act=login";
       }, 100);
     };
   }
@@ -137,14 +137,14 @@ const handleStartSignUp = (e) => {
       setTimeout(() => {
          setIsLoaded(true)
         window.location.href =
-          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/facebook?act=signup";
+          "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/login/facebook?act=signup";
       }, 100); 
     };
     if (activeApple == true){
       setTimeout(() => {
          setIsLoaded(true)
         window.location.href =
-          "https://finalyearproject-agw4.onrender.com/Growspire/v1/users/login/github?act=signup";
+          "https://finalyearproject-alpha.vercel.app/Growspire/v1/users/login/github?act=signup";
       }, 100); 
     };
   }
