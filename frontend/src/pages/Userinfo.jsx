@@ -16,7 +16,6 @@ export default function Adduser() {
   const email = encodedEmail ? atob(encodedEmail) : null;
   const navigate = useNavigate();
   const[User_Name,setusername]=useState("");
-  const[activeToken,setactivetoken]=useState("");
   const[user_Email,setemail]=useState("");
   const[user_PhoneNo,setphoneno]=useState("");
   const[Address,setaddress]=useState("");
@@ -100,12 +99,11 @@ export default function Adduser() {
 useEffect(() => {
   const getclientinfo = async () => {
   try {
-    const active = localStorage.getItem("token");
-      if (!active) {
+    const activeToken = localStorage.getItem("token");
+      if (!activeToken) {
         navigate("/");
         return;
       }
-      setactivetoken(active);
     setloading(true);
     const response = await fetch(
       `https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/user_part_info?email=${email}`,
@@ -175,8 +173,12 @@ useEffect(() => {
 
 const update_user = async() =>{
   try{
+    const activeToken = localStorage.getItem("token");
+      if (!activeToken) {
+        navigate("/");
+        return;
+      }
     setloadingup(true);
-    console.log(activeToken);
     const res = await fetch("https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/update_user",
       {
         method:"PUT",
@@ -220,6 +222,11 @@ const update_user = async() =>{
 
 const delete_user = async () => {
   try{
+    const activeToken = localStorage.getItem("token");
+      if (!activeToken) {
+        navigate("/");
+        return;
+      }
     setloadingp(true);
     console.log(modalInput);
     console.log(email);
