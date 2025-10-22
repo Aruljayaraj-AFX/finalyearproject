@@ -176,6 +176,7 @@ useEffect(() => {
 const update_user = async() =>{
   try{
     setloadingup(true);
+    console.log(activeToken);
     const res = await fetch("https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/update_user",
       {
         method:"PUT",
