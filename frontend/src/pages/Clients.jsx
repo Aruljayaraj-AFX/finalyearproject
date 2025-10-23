@@ -1,5 +1,6 @@
 import ap from "../assets/ap.jpg";
 import user from "../assets/user.png";
+import usernotfound from "../assets/usernotfound.png";
 import searchuser from "../assets/searchuser.png";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -164,7 +165,7 @@ export default function Clients() {
             ))
             :  filteredUsers.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 bg-white rounded-lg shadow-sm text-gray-500 text-xl">
-                <img src={user} alt="No users" className="w-16 h-16 mb-4 opacity-70" />
+                <img src={usernotfound} alt="No users" className="w-16 h-16 mb-4 opacity-70" />
                 <p>No users found</p>
               </div>
             ) :
