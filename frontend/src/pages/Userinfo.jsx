@@ -520,7 +520,7 @@ const delete_user = async () => {
         )}
         {errord && (
           <span className="flex m-6 gap-3 text-red-600 font-semibold">
-            <img src={error1} alt="error" className="w-6 h-6"></img>
+            <img src={errorImg} alt="error" className="w-6 h-6"></img>
             {errord}
           </span>
         )}
