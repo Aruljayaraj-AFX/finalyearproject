@@ -12,6 +12,7 @@ import backword_arrow from "../assets/backend_arrow.png";
 export default function Clients() {
   const navigate = useNavigate();
   const [totalPages, settotalpages] = useState();
+  const [tablehead,settablehead] = useState(true);
   const [currentPage, setcurrentpage] = useState(1);
   const [users, setusers] = useState([]);
   const [loading, setLoading] = useState(true); // loading state
@@ -136,7 +137,7 @@ export default function Clients() {
         </Link>
       </div>
       <div className="flex flex-col flex-grow z-20 px-5">
-        { filteredUsers.length != 0 (<div className="grid grid-cols-5 py-5 px-5 rounded-lg mt-10 bg-white shadow-sm my-3 font-semibold">
+        {tablehead(<div className="grid grid-cols-5 py-5 px-5 rounded-lg mt-10 bg-white shadow-sm my-3 font-semibold">
           <button
             onClick={handleSort}
             className="flex items-center gap-2 text-xl pl-5"
@@ -147,8 +148,7 @@ export default function Clients() {
           <h1 className="text-xl pl-50">ROLE</h1>
           <h1 className="text-xl pl-50">APPS</h1>
           <h1 className="text-xl pl-40">ACTIONS</h1>
-        </div>)
-        }
+        </div>)}
 
         {loading
           ? 
@@ -165,7 +165,7 @@ export default function Clients() {
               </div>
             ))
             :  filteredUsers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-gray-500 text-xl">
+              <div  settablehead={()=>(false)} className="flex flex-col items-center justify-center py-20 text-gray-500 text-xl">
                 <img src={usernotfound} alt="No users" className="w-46 h-46 mb-4" />
                 <p>No users found</p>
               </div>
