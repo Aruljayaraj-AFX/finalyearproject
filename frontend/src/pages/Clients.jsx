@@ -136,7 +136,7 @@ export default function Clients() {
         </Link>
       </div>
       <div className="flex flex-col flex-grow z-20 px-5">
-        <div className="grid grid-cols-5 py-5 px-5 rounded-lg mt-10 bg-white shadow-sm my-3 font-semibold">
+        { filteredUsers.length != 0 (<div className="grid grid-cols-5 py-5 px-5 rounded-lg mt-10 bg-white shadow-sm my-3 font-semibold">
           <button
             onClick={handleSort}
             className="flex items-center gap-2 text-xl pl-5"
@@ -147,7 +147,8 @@ export default function Clients() {
           <h1 className="text-xl pl-50">ROLE</h1>
           <h1 className="text-xl pl-50">APPS</h1>
           <h1 className="text-xl pl-40">ACTIONS</h1>
-        </div>
+        </div>)
+        }
 
         {loading
           ? 
