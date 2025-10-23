@@ -165,7 +165,7 @@ export default function Clients() {
             ))
             :  filteredUsers.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 bg-white rounded-lg shadow-sm text-gray-500 text-xl">
-                <img src={usernotfound} alt="No users" className="w-16 h-16 mb-4 opacity-70" />
+                <img src={usernotfound} alt="No users" className="w-36 h-36 mb-4" />
                 <p>No users found</p>
               </div>
             ) :
