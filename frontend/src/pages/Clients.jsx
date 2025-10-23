@@ -162,7 +162,12 @@ export default function Clients() {
                 <div className="h-6 bg-gray-300 rounded w-10 ml-40"></div>
               </div>
             ))
-          : 
+            :  filteredUsers.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-lg shadow-sm text-gray-500 text-xl">
+                <img src={user} alt="No users" className="w-16 h-16 mb-4 opacity-70" />
+                <p>No users found</p>
+              </div>
+            ) :
             filteredUsers.map((user, index) => (
               <div
                 className="grid grid-cols-5 items-center py-5 px-5 rounded-lg bg-white shadow-sm hover:bg-gray-200"
