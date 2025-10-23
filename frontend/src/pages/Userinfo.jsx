@@ -214,7 +214,7 @@ const update_user = async() =>{
     if(data == "successfully_update"){
       setloadingup(false);
       setMessage("successfully update");
-      setTimeout(() => setMessage(""), 1000);
+      setTimeout(() => navigate("/Clients"), 1000);
     }
     else{
       seterror("updation error")
