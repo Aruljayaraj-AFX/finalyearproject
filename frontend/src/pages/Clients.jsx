@@ -137,7 +137,7 @@ export default function Clients() {
         </Link>
       </div>
       <div className="flex flex-col flex-grow z-20 px-5">
-        {tablehead(<div className="grid grid-cols-5 py-5 px-5 rounded-lg mt-10 bg-white shadow-sm my-3 font-semibold">
+        {tablehead&&(<div className="grid grid-cols-5 py-5 px-5 rounded-lg mt-10 bg-white shadow-sm my-3 font-semibold">
           <button
             onClick={handleSort}
             className="flex items-center gap-2 text-xl pl-5"
