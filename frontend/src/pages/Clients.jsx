@@ -15,7 +15,7 @@ export default function Clients() {
   const [tablehead,settablehead] = useState(true);
   const [currentPage, setcurrentpage] = useState(1);
   const [users, setusers] = useState([]);
-  const [loading, setLoading] = useState(true); // loading state
+  const [loading, setLoading] = useState(true); 
   const [sortOrder, setSortOrder] = useState("asc");
   const [search, setSearch] = useState("");
 
@@ -41,6 +41,15 @@ export default function Clients() {
         setTimeout(() => reject(new Error("Request timeout")), timeout)
       ),
     ]);
+
+useEffect(() => {
+  if (filteredUsers.length === 0) {
+    settablehead(false);
+  } else {
+    settablehead(true);
+  }
+}, [filteredUsers]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -165,7 +174,7 @@ export default function Clients() {
               </div>
             ))
             :  filteredUsers.length === 0 ? (
-              <div  settablehead={()=>(false)} className="flex flex-col items-center justify-center py-20 text-gray-500 text-xl">
+              <div className="flex flex-col items-center justify-center py-20 text-gray-500 text-xl">
                 <img src={usernotfound} alt="No users" className="w-46 h-46 mb-4" />
                 <p>No users found</p>
               </div>
