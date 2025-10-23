@@ -1,6 +1,6 @@
 import ap from "../assets/ap.jpg";
 import user from "../assets/user.png";
-import usernotfound from "../assets/usernotfound.png";
+import usernotfound from "../assets/usernotfound.gif";
 import searchuser from "../assets/searchuser.png";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
