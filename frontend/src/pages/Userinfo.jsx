@@ -257,6 +257,7 @@ const delete_user = async () => {
     else{
       seterrord("user email not same...")
       setTimeout(() => seterrord(""), 1000);
+      setloadingp(false);
     }
   }
   catch (error) {
