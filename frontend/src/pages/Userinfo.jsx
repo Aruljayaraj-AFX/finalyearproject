@@ -105,43 +105,50 @@ useEffect(() => {
         return;
       }
     setloading(true);
-    const response = await fetch(
-      `https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/user_part_info?email=${email}`,
-      {
-        method: "GET", 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${activeToken}`,
+    if(email){
+      const response = await fetch(
+        `https://finalyearproject-alpha.vercel.app/Growspire/v1/Business_users/user_part_info?email=${email}`,
+        {
+          method: "GET", 
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${activeToken}`,
+          }
         }
+      );
+      if (!response.ok) {
+        const errorText = await response.text();
+        const error = new Error(errorText);
+        error.status = response.status;  
+        throw error;
       }
-    );
-    if (!response.ok) {
-      const errorText = await response.text();
-      const error = new Error(errorText);
-      error.status = response.status;  
-      throw error;
+      const data = await response.json();
+      setusername(data.User_Name)
+      setemail(data.user_Email)
+      setphoneno(data.user_PhoneNo)
+      setaddress(data.Address)
+      setcountry(data.user_country)
+      setstate(data.user_State)
+      setdistrict(data.user_district)
+  
+      setOriginalData({
+        User_Name: data.User_Name,
+        user_Email: data.user_Email,
+        user_PhoneNo: data.user_PhoneNo,
+        Address: data.Address,
+        user_country: data.user_country,
+        user_State: data.user_State,
+        user_district: data.user_district,
+      });
+  
+      console.log("successfully get client data!");
+      setloading(false);
+  
     }
-    const data = await response.json();
-    setusername(data.User_Name)
-    setemail(data.user_Email)
-    setphoneno(data.user_PhoneNo)
-    setaddress(data.Address)
-    setcountry(data.user_country)
-    setstate(data.user_State)
-    setdistrict(data.user_district)
-
-    setOriginalData({
-      User_Name: data.User_Name,
-      user_Email: data.user_Email,
-      user_PhoneNo: data.user_PhoneNo,
-      Address: data.Address,
-      user_country: data.user_country,
-      user_State: data.user_State,
-      user_district: data.user_district,
-    });
-
-    console.log("successfully get client data!");
-    setloading(false);
+    else{
+      setloading(false);
+      navigate("/Clients")
+    }
   }
   catch (error) {
     console.log("Error status:", error.status);
