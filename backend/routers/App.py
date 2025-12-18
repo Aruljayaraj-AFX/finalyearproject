@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends
 from dotenv import load_dotenv
 from services.info import user_Authorization
-from services.app import app_create,apps_list,name_change
+from services.app import app_create,apps_list
 from database.db import get_DB
 from schema.app_info import app_info
 
