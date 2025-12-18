@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from routers.client import router
 from routers.user import router_user_handle
+from routers.App import router_app_handle
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -42,7 +43,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         }
     )
 
-
+app.include_router(router_app_handle,prefix="/Growspire/v1/users",tags=["app_apis"])
 app.include_router(router,prefix="/Growspire/v1/users",tags=["Basics_business_dashboard"])
 app.include_router( router_user_handle,prefix="/Growspire/v1/Business_users",tags=["business_users_Crud"])
 

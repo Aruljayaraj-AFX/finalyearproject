@@ -19,10 +19,17 @@ client_SECRET_KEY = str(os.getenv("SECRT_KEY1"))
 user_SECRET_KEY = str(os.getenv("SECRT_KEY1"))
 ALGORITHM = str(os.getenv("ALGORITHM"))
 
-def generate_idno(generate_id):
+def generate_idno_app(generate_id):
     while True:
         random_number = random.randint(100000,999999)
         id = "GS"+str(random_number)
+        if random_number not in generate_id:
+            return id 
+
+def generate_idno(generate_id):
+    while True:
+        random_number = random.randint(100000,999999)
+        id = "APP"+str(random_number)
         if random_number not in generate_id:
             return id 
 

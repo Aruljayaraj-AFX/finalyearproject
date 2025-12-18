@@ -1,7 +1,6 @@
-from fastapi import APIRouter,HTTPException, Request,Depends
+from fastapi import APIRouter,Depends
 from dotenv import load_dotenv
 from services.info import user_Authorization
-from sqlalchemy.orm import Session
 from database.db import get_DB
 from services.user import new_user,update_user,delete_user,get_detail,get_pag,get_user_detail
 from schema.user_info import user_info
